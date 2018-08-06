@@ -8,21 +8,27 @@ import (
 	"restful/Models"
 	"log"
 	"restful/Controler/api"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	fs := http.FileServer(http.Dir("Resource"))
 	http.Handle("/Resource/", http.StripPrefix("/Resource/", fs))
-	http.HandleFunc("/", HomePage)
-	http.HandleFunc("/login", Controler.Login)
-	http.HandleFunc("/register", Controler.Register)
-	http.HandleFunc("/users", Controler.Status)
-	http.HandleFunc("/logout", Controler.Logout)
-	http.HandleFunc("/admin", Controler.Admin)
 
-	http.HandleFunc("/api/titles", api.Titles)
-	http.HandleFunc("/api/subtitles", api.SubTitles)
-	http.HandleFunc("/api/medias", api.Media)
+	r := mux.NewRouter()
+
+	r.HandleFunc("/", HomePage)
+	r.HandleFunc("/login", Controler.Login)
+	r.HandleFunc("/register", Controler.Register)
+	r.HandleFunc("/users", Controler.Status)
+	r.HandleFunc("/logout", Controler.Logout)
+	r.HandleFunc("/admin", Controler.Admin)
+
+	r.HandleFunc("/api/titles", api.Titles)
+	r.HandleFunc("/api/subtitle/{id:[0-9]+}", api.SubTitles)
+	r.HandleFunc("/api/media/{id:[0-9]+}", api.Media)
+
+	http.Handle("/", r)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

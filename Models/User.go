@@ -27,27 +27,27 @@ func NewTitle(title string) *Title  {
 
 type Subtitle struct {
 	Id       int64
-	TitleId       int64
+	Titleid       int64 `xorm:"index"`
 	Title string `xorm:"varchar(256) not null"`
 }
 
 func NewSubtitle(titleId int64,title string) *Subtitle  {
 	newUser := new(Subtitle)
-	newUser.TitleId = titleId
+	newUser.Titleid = titleId
 	newUser.Title = title
 	return newUser
 }
 
 
 type Media struct {
-	Id       int64
-	SubTitleId       int64
+	Id       int64 `xorm:"int"`
+	Subtitleid  int64 `xorm:"index"`
 	Text string `xorm:"text not null"`
 }
 
-func NewMedia(subtitleid int64,Text string) *Media  {
-	newUser := new(Media)
-	newUser.SubTitleId = subtitleid
-	newUser.Text = Text
-	return newUser
-}
+//func NewMedia(subtitleid int64,Text string) *Media  {
+//	newUser := new(Media)
+//	newUser.SubTitleId = subtitleid
+//	newUser.Text = Text
+//	return newUser
+//}
