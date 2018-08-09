@@ -10,7 +10,6 @@ import (
 
 var engine *xorm.Engine
 var flag bool
-var u = &Models.User{}
 
 const userDB = "root"
 const passDB  = "mghiasi"
@@ -24,7 +23,12 @@ func GetEngine() *xorm.Engine{
 		if errDB != nil {
 			fmt.Println(errDB)
 		}
-		engine.CreateTables(u)
+
+		engine.CreateTables(&Models.User{})
+		//engine.CreateTables(&Models.Title{})
+		//engine.CreateTables(&Models.Subtitle{})
+		//engine.CreateTables(&Models.Media{})
+
 		engine.Sync2(new(Models.User))
 		logWriter, err := syslog.New(syslog.LOG_DEBUG, "rest-xorm-example")
 		if err != nil {
