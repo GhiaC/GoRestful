@@ -1,0 +1,42 @@
+<div class="well">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row" id="resume">
+                <div class="col-sm-offset-4 col-sm-4">
+                    <div class="alert-danger">
+                    {{.Answer}}
+                    </div>
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="usr">Subtitle :</label>
+                            <input type="text" class="form-control" id="usr" name="username">
+                        </div>
+                        <div class="from-group">
+                            <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- end of row -->
+        </div><!-- end of container -->
+    </div> <!-- end of jumbotron -->
+</div>
+
+<div class="well">
+    <h2>Subtitles of {{.TitleId}} Layer</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Subtitles}}
+        <tr>
+            <td>{{.Id}}</td>
+            <td>{{.Title}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>

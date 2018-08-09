@@ -23,10 +23,12 @@ func main() {
 	r.HandleFunc("/users", Controler.Status)
 	r.HandleFunc("/logout", Controler.Logout)
 	r.HandleFunc("/admin", Controler.Admin)
+	r.HandleFunc("/admin/FirstLayer", Controler.FirstLayer)
 
 	r.HandleFunc("/api/titles", api.Titles)
 	r.HandleFunc("/api/subtitle/{id:[0-9]+}", api.SubTitles)
 	r.HandleFunc("/api/media/{id:[0-9]+}", api.Media)
+	r.HandleFunc("/SecondLayer/{id:[0-9]+}", Controler.SecondLayer)
 
 	http.Handle("/", r)
 

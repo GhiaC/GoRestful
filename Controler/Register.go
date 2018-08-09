@@ -28,7 +28,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		} else if username != "" && password != "" {
 			engine := GetEngine()
 			newUser := Models.NewUser(username, password)
-			affected, err := engine.Table("users").Insert(newUser)
+			affected, err := engine.Table("user").Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
@@ -41,7 +41,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func hasUser(username string) bool {
 	var id int
 	engine := GetEngine()
-	has, err := engine.Table("users").Where("username = ?", username).Cols("id").Get(&id)
+	has, err := engine.Table("user").Where("username = ?", username).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true
 	}

@@ -32,7 +32,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else if username != "" && password != "" {
 		var id int
 		engine := GetEngine()
-		has, err := engine.Table("users").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
+		has, err := engine.Table("user").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
 		if has && err == nil && id > 0 {
 			session, _ := Store.Get(r, "cookie-name")
 			session.Values["authenticated"] = true

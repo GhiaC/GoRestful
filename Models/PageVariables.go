@@ -1,7 +1,7 @@
 package Models
 
 type PageVariables struct {
-	Answer    string
+	Answer string
 }
 
 type LoginPageVariables struct {
@@ -17,7 +17,7 @@ type HomePageVariables struct {
 }
 
 type StatusPageVariables struct {
-	Users    [] User
+	Users [] User
 }
 
 type HeaderVariables struct {
@@ -26,4 +26,22 @@ type HeaderVariables struct {
 
 type NavigationVariables struct {
 	LoggedIn bool
+}
+
+type FirstLayerVariables struct {
+	Titles [] Title
+
+	Answer      string
+	Url         string
+	SubmitValue string
+}
+
+type SecondLayerVariables struct {
+
+	Subtitles [] Subtitle
+	TitleId string
+
+	Answer      string
+	Url         string
+	SubmitValue string
 }
