@@ -45,9 +45,9 @@ type Media struct {
 	Text string `xorm:"text not null"`
 }
 
-//func NewMedia(subtitleid int64,Text string) *Media  {
-//	newUser := new(Media)
-//	newUser.SubTitleId = subtitleid
-//	newUser.Text = Text
-//	return newUser
-//}
+func NewMedia(subtitleid int64,Text string) *Media  {
+	newUser := new(Media)
+	newUser.Subtitleid = subtitleid
+	newUser.Text = Text
+	return newUser
+}

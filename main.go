@@ -29,11 +29,13 @@ func main() {
 	r.HandleFunc("/api/subtitle/{id:[0-9]+}", api.SubTitles)
 	r.HandleFunc("/api/media/{id:[0-9]+}", api.Media)
 	r.HandleFunc("/SecondLayer/{id:[0-9]+}", Controler.SecondLayer)
+	r.HandleFunc("/Media/{id:[0-9]+}", Controler.Media)
 
 	http.Handle("/", r)
 
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
+
 
 
 func HomePage(w http.ResponseWriter, r *http.Request) {

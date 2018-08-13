@@ -45,3 +45,12 @@ type SecondLayerVariables struct {
 	Url         string
 	SubmitValue string
 }
+type MediaLayerVariables struct {
+
+	Medias [] Media
+	TitleId string
+
+	Answer      string
+	Url         string
+	SubmitValue string
+}
