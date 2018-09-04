@@ -22,21 +22,34 @@ func main() {
 	r.HandleFunc("/register", Controler.Register)
 	r.HandleFunc("/users", Controler.Status)
 	r.HandleFunc("/logout", Controler.Logout)
-	r.HandleFunc("/admin", Controler.Admin)
-	r.HandleFunc("/admin/FirstLayer", Controler.FirstLayer)
 
-	r.HandleFunc("/api/titles", api.Titles)
-	r.HandleFunc("/api/subtitle/{id:[0-9]+}", api.SubTitles)
-	r.HandleFunc("/api/media/{id:[0-9]+}", api.Media)
 	r.HandleFunc("/SecondLayer/{id:[0-9]+}", Controler.SecondLayer)
 	r.HandleFunc("/Media/{id:[0-9]+}", Controler.Media)
 
+	s1 := r.PathPrefix("/api").Subrouter()
+	s1.HandleFunc("/titles", api.Titles)
+	s1.HandleFunc("/subtitle/{id:[0-9]+}", api.SubTitles)
+	s1.HandleFunc("/media/{id:[0-9]+}", api.Media)
+	s1.HandleFunc("/login", api.SubTitles)
+	s1.HandleFunc("/aboutus", api.SubTitles)
+	s1.HandleFunc("/news", api.SubTitles)
+	if true{
+		s12 := r.PathPrefix("/ticket").Subrouter()
+		s12.HandleFunc("/getMessage/{id:[0-9]+}", api.SubTitles)
+		s12.HandleFunc("/getMessage", api.SubTitles)
+		s12.HandleFunc("/sendMessage", api.SubTitles)
+		s12.HandleFunc("/upload/picture", api.SubTitles)
+
+	}
+
+	s2 := r.PathPrefix("/admin").Subrouter()
+	s2.HandleFunc("/", Controler.Admin)
+	s2.HandleFunc("/FirstLayer", Controler.FirstLayer)
+
 	http.Handle("/", r)
 
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
-
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
 
@@ -50,5 +63,5 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		HomePageVars.LoginStatus = "dear " + username + ", you are logged in"
 	}
 
-	Controler.OpenTemplate(w,r,HomePageVars,"homepage.html",Models.HeaderVariables{Title:"Authentication GO"})
+	Controler.OpenTemplate(w, r, HomePageVars, "homepage.html", Models.HeaderVariables{Title: "Authentication GO"})
 }
