@@ -1,13 +1,14 @@
-package Controler
+package Admin
 
 import (
 	"net/http"
 	"GoRestful/Models"
+	"GoRestful/Controler"
 )
 
-func Register(w http.ResponseWriter, r *http.Request) {
+func AddUser(w http.ResponseWriter, r *http.Request) {
 
-	if ok, _ := Authenticated(r); ok {
+	if ok, _ := Controler.Authenticated(r); ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
@@ -16,9 +17,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		submit := r.PostForm.Get("submit")
 
 		vars := Models.LoginPageVariables{
-			Answer:      "",
-			Url:         "/register",
-			SubmitValue: "Register",
+			Answer: "",
+			//Url:         "/register",
+			SubmitValue: "Add User",
 		}
 
 		if submit != "" && (username == "" || password == "") {
@@ -26,22 +27,22 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		} else if hasUser(username) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
-			engine := GetEngine()
-			newUser := Models.NewAdmin(username, password)
-			affected, err := engine.Table("admin").Insert(newUser)
+			engine := Controler.GetEngine()
+			newUser := Models.NewUser(username, password)
+			affected, err := engine.Table("user").Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
 			}
 		}
-		OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Register"})
+		Controler.OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Add User"})
 	}
 }
 
 func hasUser(username string) bool {
 	var id int
-	engine := GetEngine()
-	has, err := engine.Table("admin").Where("username = ?", username).Cols("id").Get(&id)
+	engine := Controler.GetEngine()
+	has, err := engine.Table("gainer").Where("username = ?", username).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true
 	}

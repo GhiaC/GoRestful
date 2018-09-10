@@ -2,7 +2,7 @@ package Controler
 
 import (
 	"net/http"
-	"restful/Models"
+	"GoRestful/Models"
 )
 
 func Authenticated(r *http.Request) (bool, string) {
@@ -32,7 +32,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else if username != "" && password != "" {
 		var id int
 		engine := GetEngine()
-		has, err := engine.Table("user").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
+		has, err := engine.Table("admin").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
 		if has && err == nil && id > 0 {
 			session, _ := Store.Get(r, "cookie-name")
 			session.Values["authenticated"] = true
@@ -50,6 +50,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
+
 func Logout(w http.ResponseWriter, r *http.Request) {
 	session, _ := Store.Get(r, "cookie-name")
 	session.Values["authenticated"] = false

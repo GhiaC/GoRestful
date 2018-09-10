@@ -2,71 +2,61 @@ package api
 
 import (
 	"net/http"
-	//"restful/Models"
-	//"encoding/json"
-	//"log"
+	"encoding/json"
+	"GoRestful/Models"
+	"GoRestful/Controler"
+	"log"
 )
 
-func Authenticated(r *http.Request) (bool, string) {
+func Login(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var decodedRequest Models.LoginRequest
+	err := decoder.Decode(&decodedRequest)
+	if err != nil {
+		panic(err)
+	}
+	username := decodedRequest.Username
+	password := decodedRequest.Password
 
-	//var jsonData []byte
-	println(r.Body)
-	//err := json.Unmarshal(r.Body.Read(),&jsonData)
-	//if err != nil {
-	//	log.Println(err)
-	//}
+	Response := Models.LoginResponse{
+		Result: false,
+		Error:  "",
+		Token:  "",
+	}
 
+	if username == "" || password == "" {
+		Response.Error = "username or password is empty"
+	} else if username != "" && password != "" {
+		var id int
+		engine := Controler.GetEngine()
+		has, err := engine.Table("user").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
+		if has && err == nil && id > 0 {
+			//TODO update token
+			Response.Result = true
+			Response.Error = ""
+		} else {
+			Response.Error = "username or password is wrong"
+		}
+	}
 
-	//session, _ := Store.Get(r, "cookie-name")
-	//if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-	//	//http.Error(w, "Forbidden", http.StatusForbidden)
-	//	return false, ""
-	//}
-	//return true, session.Values["username"].(string)
+	jsonData, err := json.Marshal(Response)
+	if err != nil {
+		log.Println(err)
+	}
+	rw.WriteHeader(http.StatusOK)
+	rw.Write([]byte(string(jsonData)))
 }
 
+func Authenticated(token string) (bool, int64) {
+	var id int64
+	engine := Controler.GetEngine()
+	has, err := engine.Table("user").Where("Token = ?", token).Cols("id").Get(&id)
+	if has && err == nil && id > 0 {
+		return true, id
+	}
+	return false, 0
+}
 
-//func Login(w http.ResponseWriter, r *http.Request) {
-//	r.ParseForm()
-//	username := r.PostForm.Get("username")
-//	password := r.PostForm.Get("password")
-//	submit := r.PostForm.Get("submit")
-//
-//	vars := Models.LoginPageVariables{
-//		Answer:    "",
-//		Url : "/login",
-//		SubmitValue : "Login",
-//	}
-//
-//	if submit == "Login" && (username == "" || password == "") {
-//		vars.Answer = "username or password is empty"
-//	} else if username != "" && password != "" {
-//		var id int
-//		engine := GetEngine()
-//		has, err := engine.Table("user").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
-//		if has && err == nil && id > 0 {
-//			session, _ := Store.Get(r, "cookie-name")
-//			session.Values["authenticated"] = true
-//			session.Values["username"] = username
-//			session.Values["id"] = id
-//			session.Save(r, w)
-//		} else {
-//			vars.Answer = "username or password is wrong"
-//		}
-//	}
-//
-//	if ok, _ := Authenticated(r); !ok {
-//		OpenTemplate(w,r,vars,"login.html",Models.HeaderVariables{Title:"Login"})
-//	} else {
-//		http.Redirect(w, r, "/", http.StatusSeeOther)
-//	}
-//}
-//func Logout(w http.ResponseWriter, r *http.Request) {
-//	session, _ := Store.Get(r, "cookie-name")
-//	session.Values["authenticated"] = false
-//	session.Values["username"] = "empty"
-//	session.Values["id"] = 0
-//	session.Save(r, w)
-//	http.Redirect(w, r, "/", http.StatusSeeOther)
-//
-//}
+func Logout(w http.ResponseWriter, r *http.Request) {
+	//TODO update token
+}

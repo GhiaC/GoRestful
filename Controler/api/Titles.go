@@ -10,7 +10,7 @@ import (
 
 func Titles(w http.ResponseWriter, r *http.Request) {
 	//if ok, _ := Controler.Authenticated(r); ok {
-
+	//TODO check token
 	var users []Models.Title
 	Controler.GetEngine().Table("title").Cols("Id", "Title").Find(&users)
 	var jsonData []byte

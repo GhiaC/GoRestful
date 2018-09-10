@@ -4,11 +4,12 @@ import (
 	"net/http"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
-	"restful/Controler"
-	"restful/Models"
+	"GoRestful/Controler"
+	"GoRestful/Models"
 	"log"
-	"restful/Controler/api"
+	"GoRestful/Controler/api"
 	"github.com/gorilla/mux"
+	"GoRestful/Controler/Admin"
 )
 
 func main() {
@@ -17,44 +18,49 @@ func main() {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", HomePage)
-	r.HandleFunc("/login", Controler.Login)
-	r.HandleFunc("/register", Controler.Register)
-	r.HandleFunc("/users", Controler.Status)
-	r.HandleFunc("/logout", Controler.Logout)
-
-	r.HandleFunc("/SecondLayer/{id:[0-9]+}", Controler.SecondLayer)
-	r.HandleFunc("/Media/{id:[0-9]+}", Controler.Media)
+	r.HandleFunc("/", HomePage)                   //DONE
+	r.HandleFunc("/login", Controler.Login)       //DONE
+	r.HandleFunc("/register", Controler.Register) //DONE
 
 	s1 := r.PathPrefix("/api").Subrouter()
-	s1.HandleFunc("/titles", api.Titles)
-	s1.HandleFunc("/subtitle/{id:[0-9]+}", api.SubTitles)
-	s1.HandleFunc("/media/{id:[0-9]+}", api.Media)
-	s1.HandleFunc("/login", api.SubTitles)
-	s1.HandleFunc("/aboutus", api.SubTitles)
-	s1.HandleFunc("/news", api.SubTitles)
-	if true{
-		s12 := r.PathPrefix("/ticket").Subrouter()
-		s12.HandleFunc("/getMessage/{id:[0-9]+}", api.SubTitles)
-		s12.HandleFunc("/getMessage", api.SubTitles)
-		s12.HandleFunc("/sendMessage", api.SubTitles)
-		s12.HandleFunc("/upload/picture", api.SubTitles)
-
+	{
+		s1.HandleFunc("/titles", api.Titles)                  //DONE
+		s1.HandleFunc("/subtitles", api.AllMedia)             //DONE
+		s1.HandleFunc("/subtitle/{id:[0-9]+}", api.SubTitles) //DONE
+		s1.HandleFunc("/media/{id:[0-9]+}", api.Media)        //DONE
+		s1.HandleFunc("/login", api.Login)                    //DONE
+		s1.HandleFunc("/aboutus", api.SubTitles)              //TODO
+		s1.HandleFunc("/news", api.SubTitles)                 //TODO
+		if true {
+			s12 := r.PathPrefix("/ticket").Subrouter()
+			//s12.HandleFunc("/getMessage/{id:[0-9]+}", api.GetMessage) //TODO
+			s12.HandleFunc("/getMessage", api.GetMessage)    //DONE
+			s12.HandleFunc("/sendMessage", api.SendMessage)  //DONE
+			s12.HandleFunc("/upload/picture", api.SubTitles) //DONE //name = file
+		}
 	}
 
 	s2 := r.PathPrefix("/admin").Subrouter()
-	s2.HandleFunc("/", Controler.Admin)
-	s2.HandleFunc("/FirstLayer", Controler.FirstLayer)
+	{
+		s2.HandleFunc("/", Admin.Admin)                              //DONE
+		s2.HandleFunc("/FirstLayer", Admin.FirstLayer)               //DONE
+		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer) //DONE
+		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media)             //DONE
+		s2.HandleFunc("/adduser", Admin.AddUser)                     //DONE
+		s2.HandleFunc("/admins", Admin.Status)                       //DONE
+		s2.HandleFunc("/users", Admin.Status)                        //TODO
+		s2.HandleFunc("/logout", Controler.Logout)                   //DONE
+	}
 
 	http.Handle("/", r)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8088", nil))
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now() // find the time right now
-	HomePageVars := Models.HomePageVariables{ //store the date and time in a struct
+	HomePageVars := Models.HomePageVariables{//store the date and time in a struct
 		Date: now.Format("02-01-2006"),
 		Time: now.Format("15:04:05"),
 		LoginStatus: "you aren't logged in",

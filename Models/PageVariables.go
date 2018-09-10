@@ -17,7 +17,7 @@ type HomePageVariables struct {
 }
 
 type StatusPageVariables struct {
-	Users [] User
+	Users [] Admin
 }
 
 type HeaderVariables struct {
@@ -37,17 +37,15 @@ type FirstLayerVariables struct {
 }
 
 type SecondLayerVariables struct {
-
 	Subtitles [] Subtitle
-	TitleId string
+	TitleId   string
 
 	Answer      string
 	Url         string
 	SubmitValue string
 }
 type MediaLayerVariables struct {
-
-	Medias [] Media
+	Medias  [] Media
 	TitleId string
 
 	Answer      string

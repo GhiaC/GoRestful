@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"strings"
-	"restful/Models"
+	"GoRestful/Models"
 )
 
 func writeHtml(){
