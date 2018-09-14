@@ -5,15 +5,15 @@ import (
 	"GoRestful/Models"
 )
 
-func Authenticated(r *http.Request) (bool, string) {
+func Authenticated(r *http.Request) (bool, string, int) {
 	session, _ := Store.Get(r, "cookie-name")
+
 	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
 		//http.Error(w, "Forbidden", http.StatusForbidden)
-		return false, ""
+		return false, "", 0
 	}
-	return true, session.Values["username"].(string)
+	return true, session.Values["username"].(string), session.Values["id"].(int)
 }
-
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -22,9 +22,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	submit := r.PostForm.Get("submit")
 
 	vars := Models.LoginPageVariables{
-		Answer:    "",
-		Url : "/login",
-		SubmitValue : "Login",
+		Answer:      "",
+		SubmitValue: "Login",
 	}
 
 	if submit == "Login" && (username == "" || password == "") {
@@ -44,8 +43,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if ok, _ := Authenticated(r); !ok {
-		OpenTemplate(w,r,vars,"login.html",Models.HeaderVariables{Title:"Login"})
+	if ok, _, _ := Authenticated(r); !ok {
+		OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Login"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}

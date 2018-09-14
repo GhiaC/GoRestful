@@ -12,6 +12,10 @@ import (
 	"GoRestful/Controler/Admin"
 )
 
+const (
+	STATIC_DIR = "/files/"
+)
+
 func main() {
 	fs := http.FileServer(http.Dir("Resource"))
 	http.Handle("/Resource/", http.StripPrefix("/Resource/", fs))
@@ -30,30 +34,39 @@ func main() {
 		s1.HandleFunc("/media/{id:[0-9]+}", api.Media)        //DONE
 		s1.HandleFunc("/login", api.Login)                    //DONE
 		s1.HandleFunc("/aboutus", api.SubTitles)              //TODO
-		s1.HandleFunc("/news", api.SubTitles)                 //TODO
-		if true {
-			s12 := r.PathPrefix("/ticket").Subrouter()
+		s1.HandleFunc("/news", api.AllNews)                   //DONE
+		s12 := s1.PathPrefix("/ticket").Subrouter()
+		//if true
+		{
 			//s12.HandleFunc("/getMessage/{id:[0-9]+}", api.GetMessage) //TODO
-			s12.HandleFunc("/getMessage", api.GetMessage)    //DONE
-			s12.HandleFunc("/sendMessage", api.SendMessage)  //DONE
-			s12.HandleFunc("/upload/picture", api.SubTitles) //DONE //name = file
+			s12.HandleFunc("/getMessage", api.GetMessage)                    //DONE
+			s12.HandleFunc("/sendMessage", api.SendMessage)                  //DONE
+			s12.HandleFunc("/upload/picture", Controler.UploadToUserPicture) //DONE //name = file
 		}
 	}
 
 	s2 := r.PathPrefix("/admin").Subrouter()
 	{
-		s2.HandleFunc("/", Admin.Admin)                              //DONE
-		s2.HandleFunc("/FirstLayer", Admin.FirstLayer)               //DONE
-		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer) //DONE
-		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media)             //DONE
-		s2.HandleFunc("/adduser", Admin.AddUser)                     //DONE
-		s2.HandleFunc("/admins", Admin.Status)                       //DONE
-		s2.HandleFunc("/users", Admin.Status)                        //TODO
-		s2.HandleFunc("/logout", Controler.Logout)                   //DONE
+		s2.HandleFunc("/", Admin.Admin)                                  //DONE
+		s2.HandleFunc("/FirstLayer", Admin.FirstLayer)                   //DONE
+		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer)     //DONE
+		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media)                 //DONE
+		s2.HandleFunc("/adduser", Admin.AddUser)                         //DONE
+		s2.HandleFunc("/users", Admin.Users)                             //DONE
+		s2.HandleFunc("/admins", Admin.Status)                           //DONE
+		s2.HandleFunc("/news", Admin.News)                               //DONE
+		s2.HandleFunc("/upload", Admin.UploadPage)                       //DONE
+		s2.HandleFunc("/upload/picture", Controler.UploadToAdminPicture) //DONE
+		s2.HandleFunc("/upload/file", Controler.UploadToAdminFile)       //DONE
+		s2.HandleFunc("/messages", Admin.Messages)                       //DONE //TODO
+		s2.HandleFunc("/message/answer/{id:[0-9]+}", Admin.Answer)       //TODO
+		s2.HandleFunc("/users", Admin.Status)                            //DONE
+		s2.HandleFunc("/logout", Controler.Logout)                       //DONE
 	}
+	println(Controler.TokenGenerator()+Controler.TokenGenerator())
 
+	r.HandleFunc("/file/",Controler.HandleClient)
 	http.Handle("/", r)
-
 	log.Fatal(http.ListenAndServe(":8088", nil))
 }
 
@@ -65,7 +78,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		Time: now.Format("15:04:05"),
 		LoginStatus: "you aren't logged in",
 	}
-	if ok, username := Controler.Authenticated(r); ok {
+	if ok, username, _ := Controler.Authenticated(r); ok {
 		HomePageVars.LoginStatus = "dear " + username + ", you are logged in"
 	}
 

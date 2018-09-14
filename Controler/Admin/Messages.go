@@ -9,9 +9,22 @@ import (
 	"GoRestful/Models/Struct"
 )
 
-func Media(w http.ResponseWriter, r *http.Request) {
+func Messages(w http.ResponseWriter, r *http.Request) {
+	if ok, _, _ := Controler.Authenticated(r); ok {
+		var messages []Struct.UserMessage
+		Controler.GetEngine().Table(Struct.UserMessage{}).AllCols().Find(&messages)
+		result := Models.MessagesLayerVariables{
+			Messages: messages,
+		}
+		Controler.OpenTemplate(w, r, result, "Messages.html", Models.HeaderVariables{Title: "Messages"})
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
+
+func Answer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _,_ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		//text := r.PostForm.Get("text")
@@ -19,7 +32,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 
 		result := Models.MediaLayerVariables{
 			Answer:      "",
-			SubmitValue: "Add Media",
+			SubmitValue: "Send Answer",
 		}
 
 		if submit != "" && (text == "") {
@@ -42,19 +55,17 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		result.Medias = users
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
 
-	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
-
-		var medias []Struct.Media
-		Controler.GetEngine().Table("media").Select("media.*,subtitle.*").
-			Join("INNER", "subtitle", "subtitle.id = media.subtitleid ").Where("subtitleid = ?", vars["id"]).Find(&medias)
-
-		result := Models.MediaLayerVariables{
+	} else if ok, _, _ := Controler.Authenticated(r); ok {
+		var msg Models.AnswerQuery
+		Controler.GetEngine().Table("user_message").Select("user.username,user_message.*").
+			Join("INNER", "user", "user_message.user_id = user.id ").Where("user_message.id = ?", vars["id"]).Get(&msg)
+		result := Models.AnswerLayerVariables{
 			TitleId:     vars["id"],
-			Medias:   medias,
+			Msg:         msg,
 			Answer:      "",
-			SubmitValue: "Add Media",}
+			SubmitValue: "Send Answer",}
 
-		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Media"})
+		Controler.OpenTemplate(w, r, result, "Answer.html", Models.HeaderVariables{Title: "Answer"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}

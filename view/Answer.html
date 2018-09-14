@@ -1,0 +1,86 @@
+<div class="well">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    ID : {{.Msg.Id}}
+                    <br>
+                    Username : {{.Msg.Username}}
+                    <br>
+                    Text : {{.Msg.Text}}
+                    <br>
+                    Created : {{.Msg.Created}}
+                </div>
+            </div>
+            <div class="row" id="resume">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <div class="alert-danger">
+                    {{.Answer}}
+                    </div>
+                    <form method="post">
+                        <input type="text" name="fileaddress" id="fileaddress">
+                        <div class="form-group">
+                            <label for="text">Text :</label>
+                            <textarea class="form-control" id="text" name="text"></textarea>
+                        </div>
+                        <form id="upload_form" enctype="multipart/form-data" method="post">
+                            <input type="file" name="file" id="file"><br>
+                            <input type="button" value="Upload File" onclick="uploadFile()">
+                            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+                            <h3 id="status"></h3>
+                            <p id="loaded_n_total"></p>
+                        </form>
+
+                        <script>
+                            /* Script written by Adam Khoury @ DevelopPHP.com */
+                            /* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
+                            function _(el) {
+                                return document.getElementById(el);
+                            }
+
+                            function uploadFile() {
+                                var file = _("file").files[0];
+                                // alert(file.name+" | "+file.size+" | "+file.type);
+                                var formdata = new FormData();
+                                formdata.append("file", file);
+                                var ajax = new XMLHttpRequest();
+                                ajax.upload.addEventListener("progress", progressHandler, false);
+                                ajax.addEventListener("load", completeHandler, false);
+                                ajax.addEventListener("error", errorHandler, false);
+                                ajax.addEventListener("abort", abortHandler, false);
+                                ajax.open("POST", "/admin/upload/picture");
+                                ajax.send(formdata);
+                            }
+
+                            function progressHandler(event) {
+                                _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+                                var percent = (event.loaded / event.total) * 100;
+                                _("progressBar").value = Math.round(percent);
+                                _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+                            }
+
+                            function completeHandler(event) {
+                                alert(event.target.responseText.);
+                                _("fileaddress").value = event.target.responseText;
+                                _("status").innerHTML = event.target.responseText;
+                                _("progressBar").value = 0;
+                            }
+
+                            function errorHandler(event) {
+                                _("status").innerHTML = "Upload Failed";
+                            }
+
+                            function abortHandler(event) {
+                                _("status").innerHTML = "Upload Aborted";
+                            }
+                        </script>
+                        <div class="from-group">
+                            <button type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- end of row -->
+        </div><!-- end of container -->
+    </div> <!-- end of jumbotron -->
+</div>

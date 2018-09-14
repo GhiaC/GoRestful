@@ -32,7 +32,7 @@ func OpenTemplate(w http.ResponseWriter, r *http.Request, vars interface{}, file
 	s1.Execute(w, headerVar)
 
 	s2 := templates.Lookup("navigation.html")
-	loggedIn, _ := Authenticated(r)
+	loggedIn, _ ,_:= Authenticated(r)
 	s2.Execute(w, Models.NavigationVariables{LoggedIn: loggedIn})
 
 	s3 := templates.Lookup("jumbotron.html")

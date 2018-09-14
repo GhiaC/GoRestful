@@ -6,7 +6,7 @@ import (
 	//"GoRestful/Models"
 	//"log"
 	//"log/syslog"
-	"GoRestful/Models"
+	"GoRestful/Models/Struct"
 )
 
 var engine *xorm.Engine
@@ -25,14 +25,18 @@ func GetEngine() *xorm.Engine{
 			fmt.Println(errDB)
 		}
 
-		//engine.CreateTables(&Models.User{})
-		//engine.CreateTables(&Models.UserMessage{})
-		//engine.CreateTables(&Models.Admin{})
-		//engine.CreateTables(&Models.AdminMessage{})
-		//engine.CreateTables(&Models.Media{})
-		//engine.CreateTables(&Models.Subtitle{})
-		//engine.CreateTables(&Models.Title{})
-		engine.CreateTables(&Models.Picture{})
+		engine.CreateTables(&Struct.User{})
+		engine.CreateTables(&Struct.UserMessage{})
+		engine.CreateTables(&Struct.Admin{})
+		engine.CreateTables(&Struct.AdminMessage{})
+		engine.CreateTables(&Struct.Media{})
+		engine.CreateTables(&Struct.Subtitle{})
+		engine.CreateTables(&Struct.Title{})
+		engine.CreateTables(&Struct.UserPicture{})
+		engine.CreateTables(&Struct.AdminPicture{})
+		engine.CreateTables(&Struct.AdminFile{})
+		engine.CreateTables(&Struct.News{})
+
 
 		//engine.Sync2(new(Models.User))
 		//logWriter, err := syslog.New(syslog.LOG_DEBUG, "rest-xorm-example")

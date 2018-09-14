@@ -6,6 +6,7 @@ import (
 	"GoRestful/Models"
 	"encoding/json"
 	"log"
+	"GoRestful/Models/Struct"
 )
 
 func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
@@ -18,24 +19,27 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 	}
 	token := decodedRequest.Token
 	text := decodedRequest.Text
-
 	Response := Models.SendMessageResponse{
-		Error:     "",
+		Error:     "token isn't valid.",
 		Result:    false,
 		MessageId: 0,
 	}
-	if ok, id := Authenticated(token); ok {
+	ok, id := Authenticated(token)
+	println(ok,id)
+	if ok {
 		if text == "" {
 			Response.Error = "Message is empty"
 		} else {
 			engine := Controler.GetEngine()
-			newMessage := Models.NewUserMessage(id, text)
-			affected, err := engine.Table("UserMessage").Insert(newMessage)
+			newMessage := Struct.NewUserMessage(id, text)
+			affected, err := engine.Table("user_message").Insert(newMessage)
 			//println(affected)
 			if affected > 0 && err == nil {
 				Response.Result = true
 				Response.Error = ""
 				Response.MessageId = newMessage.Id
+			} else{
+				Response.Error = "Database Problem!"
 			}
 		}
 
@@ -66,11 +70,11 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 		Result: false,
 	}
 	if logged {
-		var messages1 []Models.UserMessage
-		Controler.GetEngine().Table("User_Message").Cols("id", "user_id", "text", "created").
+		var messages1 []Struct.UserMessage
+		Controler.GetEngine().Table("user_message").Cols("id", "user_id", "text", "created").
 			Where("user_id = ?", userid).
 			Find(&messages1)
-		var messages2 []Models.AdminMessage
+		var messages2 []Struct.AdminMessage
 		Controler.GetEngine().Table("admin_Message").Cols("id", "user_id", "username", "text", "created").
 			Join("INNER", "admin", "admin.Id = admin_message.admin_id ").
 			Where("user_id = ?", userid).
@@ -88,6 +92,7 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(string(jsonData)))
 }

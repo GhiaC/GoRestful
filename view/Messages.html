@@ -1,0 +1,23 @@
+<div class="well">
+    <h2>Messages</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Text</th>
+            <th>Created Date</th>
+            <th>Answer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Messages}}
+        <tr>
+            <td>{{.UserId}}</td>
+            <td>{{.Text}}</td>
+            <td>{{.Created}}</td>
+            <td><a href="/admin/message/answer/{{.Id}}">Answer</a></td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>

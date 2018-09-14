@@ -3,11 +3,12 @@ package Controler
 import (
 	"net/http"
 	"GoRestful/Models"
+	"GoRestful/Models/Struct"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
 
-	if ok, _ := Authenticated(r); ok {
+	if ok, _ ,_:= Authenticated(r); ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
@@ -17,7 +18,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 		vars := Models.LoginPageVariables{
 			Answer:      "",
-			Url:         "/register",
 			SubmitValue: "Register",
 		}
 
@@ -27,7 +27,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := GetEngine()
-			newUser := Models.NewAdmin(username, password)
+			newUser := Struct.NewAdmin(username, password)
 			affected, err := engine.Table("admin").Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {

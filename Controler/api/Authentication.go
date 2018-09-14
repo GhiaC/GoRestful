@@ -43,6 +43,7 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+	rw.Header().Set("Content-Type", "application/json")
 	rw.WriteHeader(http.StatusOK)
 	rw.Write([]byte(string(jsonData)))
 }
@@ -50,7 +51,7 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 func Authenticated(token string) (bool, int64) {
 	var id int64
 	engine := Controler.GetEngine()
-	has, err := engine.Table("user").Where("Token = ?", token).Cols("id").Get(&id)
+	has, err := engine.Table("user").Where("token = ?", token).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true, id
 	}
