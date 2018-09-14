@@ -19,7 +19,7 @@ type HomePageVariables struct {
 }
 
 type StatusPageVariables struct {
-	Users [] Struct.Admin
+	Users [] Struct.User
 }
 type UsersPageVariables struct {
 	Users [] Struct.User
@@ -76,9 +76,9 @@ type NewsLayerVariables struct {
 }
 
 type AdminFileLayerVariables struct {
-	Files [] Struct.AdminFile
+	Files [] Struct.File
 }
 
 type MessagesLayerVariables struct {
-	Messages [] Struct.UserMessage
+	Messages [] Struct.Message
 }

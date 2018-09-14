@@ -17,7 +17,6 @@ func News(w http.ResponseWriter, r *http.Request) {
 
 		result := Models.NewsLayerVariables{
 			Answer: "",
-			//Url:         "/register",
 			SubmitValue: "Add News",
 		}
 
@@ -27,7 +26,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 			engine := Controler.GetEngine()
 			//id, _ := strconv.Atoi(vars["id"])
 			newUser := Struct.NewNews(text, fileName)
-			affected, err := engine.Table("news").Insert(newUser)
+			affected, err := engine.Table(Struct.News{}).Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
@@ -35,7 +34,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var news []Struct.News
-		Controler.GetEngine().Table("News").AllCols().OrderBy("created").Find(&news)
+		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
 
 		result.News = news
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
@@ -43,13 +42,11 @@ func News(w http.ResponseWriter, r *http.Request) {
 	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
 
 		var news []Struct.News
-		Controler.GetEngine().Table("News").AllCols().OrderBy("created").Find(&news)
+		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
 
 		result := Models.NewsLayerVariables{
-			//TitleId:     vars["id"],
 			News:   news,
 			Answer: "",
-			//Url:         "/register",
 			SubmitValue: "Add News",}
 
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})

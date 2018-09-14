@@ -7,14 +7,16 @@ import (
 	"log"
 	"github.com/gorilla/mux"
 	"GoRestful/Models/Struct"
+	"strconv"
 )
 
 func SubTitles(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
 
 	var users []Struct.Subtitle
-	Controler.GetEngine().Table("subtitle").Cols("Id", "Titleid", "Title").Where("Titleid = ?", vars["id"]).Find(&users)
+	Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(Struct.Subtitle{TitleId: int64(id)}).Find(&users)
 	var jsonData []byte
 	jsonData, err := json.Marshal(users)
 	if err != nil {

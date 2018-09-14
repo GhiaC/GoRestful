@@ -1,30 +1,21 @@
-package Controler
+package api
 
 import (
-	"fmt"
-	"io/ioutil"
-	"mime/multipart"
 	"net/http"
+	"mime/multipart"
 	"GoRestful/Models"
+	"io/ioutil"
+	"fmt"
 	"encoding/json"
 	"log"
+	"GoRestful/Controler"
 	"GoRestful/Models/Struct"
 )
 
-func UploadToUserPicture(w http.ResponseWriter, r *http.Request) {
-	uploadFile(w, r, Struct.UserPicture{})
-}
-
-func UploadToAdminPicture(w http.ResponseWriter, r *http.Request) {
-	uploadFile(w, r, Struct.AdminPicture{})
-}
-
-func UploadToAdminFile(w http.ResponseWriter, r *http.Request) {
-	uploadFile(w, r, Struct.AdminFile{})
-}
+var fileKey = Controler.TokenGenerator()
 
 //UploadFile uploads a file to the server
-func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
+func UploadFile(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -40,32 +31,6 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 	//mimeType := handle.Header.Get("Content-Type")
 	//switch mimeType {
 	//case "image/jpeg":
-
-	//if submit != "" && (text == "") {
-	//	result.Answer = "text is empty"
-	//} else if text != "" {
-
-	response := Models.UploadFileResponse{
-		Error:    "",
-		Result:   false,
-		FileName: "",
-	}
-	saveFile(w, file, handle, &response)
-
-	if auth, _, id := Authenticated(r); auth && id > 0 {
-		engine := GetEngine()
-		//id, _ := strconv.Atoi(vars["id"])
-		newFile := Struct.NewAdminFile(id, handle.Filename)
-		affected, _ := engine.Table(table).Insert(newFile)
-		println(affected)
-		response.FileName = "/file/admin/picture/" + string(newFile.Id)
-		jsonResponse(w, http.StatusCreated, &response)
-	}
-	//if affected > 0 && err == nil {
-	//	result.Answer = "Successful."
-	//}
-	//}
-
 	//case "image/png":
 	//	saveFile(w, file, handle)
 	//default:
@@ -75,6 +40,24 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 	//		FileName: "",
 	//	})
 	//}
+
+	response := Models.UploadFileResponse{
+		Error:    "",
+		Result:   false,
+		FileName: "",
+	}
+	fileKey = Controler.TokenGenerator()
+
+	saveFile(w, file, handle, &response)
+
+	if auth, _, id := Controler.Authenticated(r); auth && id > 0 {
+		engine := Controler.GetEngine()
+		//id, _ := strconv.Atoi(vars["id"])
+		newFile := Struct.NewFile(id, handle.Filename, fileKey)
+		engine.Table(Struct.Picture{}).Insert(newFile) //has result
+		response.FileName = fileKey
+		jsonResponse(w, http.StatusCreated, &response)
+	}
 }
 
 func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader, response *Models.UploadFileResponse) {
@@ -91,7 +74,6 @@ func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.File
 	}
 	response.Error = "File uploaded successfully!."
 	response.Result = true
-	//response.FileName = "/files/" + handle.Filename
 }
 
 func jsonResponse(w http.ResponseWriter, code int, message *Models.UploadFileResponse) {
@@ -103,5 +85,4 @@ func jsonResponse(w http.ResponseWriter, code int, message *Models.UploadFileRes
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(string(jsonData)))
-	//fmt.Fprint(w, message)
 }

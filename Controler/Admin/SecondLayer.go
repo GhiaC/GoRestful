@@ -7,18 +7,19 @@ import (
 	"strconv"
 	"github.com/gorilla/mux"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func SecondLayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
 		submit := r.PostForm.Get("submit")
+		id, _ := strconv.Atoi(vars["id"])
 
 		result := Models.SecondLayerVariables{
-			Answer:      "",
-			//Url:         "/register",
+			Answer: "",
 			SubmitValue: "Add Subtitle",
 		}
 
@@ -26,9 +27,8 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 			result.Answer = "text is empty"
 		} else if username != "" {
 			engine := Controler.GetEngine()
-			id, _ := strconv.Atoi(vars["id"])
 			newUser := Struct.NewSubtitle(int64(id), username)
-			affected, err := engine.Table("subtitle").Insert(newUser)
+			affected, err := engine.Table(Struct.Subtitle{}).Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
@@ -36,14 +36,14 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var subtitles []Struct.Subtitle
-		Controler.GetEngine().Table("subtitle").AllCols().Where("title_id = ?", vars["id"]).Find(&subtitles)
+		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"TitleId": int64(id)}).Find(&subtitles)
 
 		result.Subtitles = subtitles
 		Controler.OpenTemplate(w, r, result, "SecondLayer.html", Models.HeaderVariables{Title: "SecondLayer"})
 
-	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
+	} else if ok, _, _ := Controler.Authenticated(r); ok {
 		var subtitles []Struct.Subtitle
-		Controler.GetEngine().Table("subtitle").AllCols().Where("title_id = ?", vars["id"]).Find(&subtitles)
+		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"title_id": vars["id"]}).Find(&subtitles)
 
 		result := Models.SecondLayerVariables{
 			TitleId:     vars["id"],
@@ -56,4 +56,3 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
-

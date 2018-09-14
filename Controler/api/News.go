@@ -11,7 +11,7 @@ import (
 func AllNews(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
 	var news []Struct.News
-	Controler.GetEngine().Table("news").AllCols().Find(&news)
+	Controler.GetEngine().Table(Struct.News{}).AllCols().Find(&news)
 	var jsonData []byte
 
 	jsonData, err := json.Marshal(news)

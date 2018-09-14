@@ -7,11 +7,12 @@ import (
 	"github.com/gorilla/mux"
 	"strconv"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func Media(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _,_ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		//text := r.PostForm.Get("text")
@@ -28,29 +29,32 @@ func Media(w http.ResponseWriter, r *http.Request) {
 			engine := Controler.GetEngine()
 			id, _ := strconv.Atoi(vars["id"])
 			newUser := Struct.NewMedia(int64(id), text)
-			affected, err := engine.Table("media").Insert(newUser)
-			println(affected)
+			affected, err := engine.Table(Struct.Media{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
 			}
 		}
 
 		var users []Struct.Media
-		Controler.GetEngine().Table("media").Select("media.*,subtitle.*").
-			Join("INNER", "subtitle", "subtitle.id = media.subtitleid ").Where("subtitleid = ?", vars["id"]).Find(&users)
+		Controler.GetEngine().Table(Struct.Media{}).Select("media.*,subtitle.*").
+			Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").
+			Where(builder.Eq{"subtitleid": vars["id"]}).
+			Find(&users)
 
 		result.Medias = users
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
 
-	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
+	} else if ok, _, _ := Controler.Authenticated(r); ok {
 
 		var medias []Struct.Media
-		Controler.GetEngine().Table("media").Select("media.*,subtitle.*").
-			Join("INNER", "subtitle", "subtitle.id = media.subtitleid ").Where("subtitleid = ?", vars["id"]).Find(&medias)
+		Controler.GetEngine().Table(Struct.Media{}).Select("media.*,subtitle.*").
+			Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").
+			Where(builder.Eq{"subtitleid": vars["id"]}).
+			Find(&medias)
 
 		result := Models.MediaLayerVariables{
 			TitleId:     vars["id"],
-			Medias:   medias,
+			Medias:      medias,
 			Answer:      "",
 			SubmitValue: "Add Media",}
 

@@ -25,7 +25,7 @@
                         </div>
                         <form id="upload_form" enctype="multipart/form-data" method="post">
                             <input type="file" name="file" id="file"><br>
-                            <input type="button" value="Upload File" onclick="uploadFile()">
+                            <input type="button" class="btn col-sm-12 btn-success btn-sm" value="Upload File" onclick="uploadFile()">
                             <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
                             <h3 id="status"></h3>
                             <p id="loaded_n_total"></p>
@@ -60,9 +60,9 @@
                             }
 
                             function completeHandler(event) {
-                                alert(event.target.responseText.);
-                                _("fileaddress").value = event.target.responseText;
-                                _("status").innerHTML = event.target.responseText;
+                                response = JSON.parse(event.target.responseText);
+                                _("fileaddress").value = response.FileName;
+                                _("status").innerHTML = response.Error;
                                 _("progressBar").value = 0;
                             }
 

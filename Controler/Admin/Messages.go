@@ -7,12 +7,14 @@ import (
 	"github.com/gorilla/mux"
 	"strconv"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func Messages(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _ := Controler.Authenticated(r); ok {
-		var messages []Struct.UserMessage
-		Controler.GetEngine().Table(Struct.UserMessage{}).AllCols().Find(&messages)
+		var messages []Struct.Message
+
+		Controler.GetEngine().Table(Struct.Message{}).AllCols().Distinct("user_id").Find(&messages)
 		result := Models.MessagesLayerVariables{
 			Messages: messages,
 		}
@@ -22,15 +24,15 @@ func Messages(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Answer(w http.ResponseWriter, r *http.Request) {
+func Answer(w http.ResponseWriter, r *http.Request) { // ajib daghon
 	vars := mux.Vars(r)
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, UserId := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
-		//text := r.PostForm.Get("text")
+		fileAddress := r.PostForm.Get("fileaddress")
 		submit := r.PostForm.Get("submit")
 
-		result := Models.MediaLayerVariables{
+		result := Models.AnswerLayerVariables{
 			Answer:      "",
 			SubmitValue: "Send Answer",
 		}
@@ -40,25 +42,32 @@ func Answer(w http.ResponseWriter, r *http.Request) {
 		} else if text != "" {
 			engine := Controler.GetEngine()
 			id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewMedia(int64(id), text)
-			affected, err := engine.Table("media").Insert(newUser)
+			newMessage := Struct.NewMessage(UserId, id, text, fileAddress)
+			affected, err := engine.Table(Struct.Media{}).Insert(newMessage)
 			println(affected)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
 			}
 		}
 
-		var users []Struct.Media
-		Controler.GetEngine().Table("media").Select("media.*,subtitle.*").
-			Join("INNER", "subtitle", "subtitle.id = media.subtitleid ").Where("subtitleid = ?", vars["id"]).Find(&users)
+		var msg Models.AnswerQuery
 
-		result.Medias = users
+		Controler.GetEngine().Table(Struct.Message{}).
+			Select("user.username,message.*").
+			Join("INNER", Struct.User{}, "message.user_id = user.id ").
+			Where(builder.Eq{"message.id": vars["id"]}).Get(&msg)
+		result.Msg = msg
+
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
 
 	} else if ok, _, _ := Controler.Authenticated(r); ok {
+
 		var msg Models.AnswerQuery
-		Controler.GetEngine().Table("user_message").Select("user.username,user_message.*").
-			Join("INNER", "user", "user_message.user_id = user.id ").Where("user_message.id = ?", vars["id"]).Get(&msg)
+
+		Controler.GetEngine().Table(Struct.Message{}).
+			Select("user.username,message.*").
+			Join("INNER", Struct.User{}, "message.user_id = user.id ").
+			Where(builder.Eq{"message.id": vars["id"]}).Get(&msg)
 		result := Models.AnswerLayerVariables{
 			TitleId:     vars["id"],
 			Msg:         msg,

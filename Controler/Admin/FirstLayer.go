@@ -23,23 +23,22 @@ func FirstLayer(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "text is empty"
 		} else if username != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewTitle(username)
-			affected, err := engine.Table("title").Insert(newUser)
-			println(affected)
+			new := Struct.NewTitle(username)
+			affected, err := engine.Table(Struct.Title{}).Insert(new)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful."
 			}
 		}
 
 		var titles []Struct.Title
-		Controler.GetEngine().Table("title").Cols("Id", "Title").Find(&titles)
+		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title").Find(&titles)
 		vars.Titles = titles
 		Controler.OpenTemplate(w, r, vars, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
 
 	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
 
 		var titles []Struct.Title
-		Controler.GetEngine().Table("title").Cols("Id", "Title").Find(&titles)
+		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title").Find(&titles)
 
 		result := Models.FirstLayerVariables{
 			Titles:      titles,

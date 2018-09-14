@@ -15,8 +15,7 @@ type SendMessageResponse struct {
 type GetMessageResponse struct {
 	Result        bool
 	Error         string
-	UserMessages  []Struct.UserMessage
-	AdminMessages []Struct.AdminMessage
+	Messages  []Struct.Message
 }
 
 type UploadFileResponse struct {

@@ -8,7 +8,7 @@ import (
 
 func Register(w http.ResponseWriter, r *http.Request) {
 
-	if ok, _ ,_:= Authenticated(r); ok {
+	if ok, _, _ := Authenticated(r); ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
@@ -27,9 +27,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := GetEngine()
-			newUser := Struct.NewAdmin(username, password)
-			affected, err := engine.Table("admin").Insert(newUser)
-			println(affected)
+			newUser := Struct.NewUser(username, password, 1) //Type = 1 is for admin
+			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
 			}
@@ -41,7 +40,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func hasUser(username string) bool {
 	var id int
 	engine := GetEngine()
-	has, err := engine.Table("admin").Where("username = ?", username).Cols("id").Get(&id)
+	has, err := engine.Table(Struct.User{}).Where(Struct.User{Username:username}).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true
 	}

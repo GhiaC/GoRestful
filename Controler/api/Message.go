@@ -25,20 +25,18 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 		MessageId: 0,
 	}
 	ok, id := Authenticated(token)
-	println(ok,id)
 	if ok {
 		if text == "" {
 			Response.Error = "Message is empty"
 		} else {
 			engine := Controler.GetEngine()
-			newMessage := Struct.NewUserMessage(id, text)
-			affected, err := engine.Table("user_message").Insert(newMessage)
-			//println(affected)
+			newMessage := Struct.NewMessage(id, 0, text)
+			affected, err := engine.Table(Struct.Message{}).Insert(newMessage)
 			if affected > 0 && err == nil {
 				Response.Result = true
 				Response.Error = ""
 				Response.MessageId = newMessage.Id
-			} else{
+			} else {
 				Response.Error = "Database Problem!"
 			}
 		}
@@ -70,19 +68,13 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 		Result: false,
 	}
 	if logged {
-		var messages1 []Struct.UserMessage
-		Controler.GetEngine().Table("user_message").Cols("id", "user_id", "text", "created").
-			Where("user_id = ?", userid).
-			Find(&messages1)
-		var messages2 []Struct.AdminMessage
-		Controler.GetEngine().Table("admin_Message").Cols("id", "user_id", "username", "text", "created").
-			Join("INNER", "admin", "admin.Id = admin_message.admin_id ").
-			Where("user_id = ?", userid).
-			Find(&messages2)
+		var messages []Struct.Message
+		Controler.GetEngine().Table(Struct.Message{}).AllCols().
+			Where(Struct.Message{UserId: userid}).Or(Struct.Message{AnswerTo: userid}).
+			Find(&messages)
 
 		Response.Result = true
-		Response.UserMessages = messages1
-		Response.AdminMessages = messages2
+		Response.Messages = messages
 	} else {
 		Response.Error = "Access Denied"
 	}

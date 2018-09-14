@@ -6,6 +6,8 @@ import (
 	"GoRestful/Models"
 	"GoRestful/Controler"
 	"log"
+	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func Login(rw http.ResponseWriter, req *http.Request) {
@@ -29,11 +31,19 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 	} else if username != "" && password != "" {
 		var id int
 		engine := Controler.GetEngine()
-		has, err := engine.Table("user").Where("username = ? and password = ? ", username, password).Cols("id").Get(&id)
+		has, err := engine.Table(Struct.User{}).
+			Where(builder.Eq{"Username": username, "Password": password, "Type": 2}).
+			Cols("id").Get(&id)
 		if has && err == nil && id > 0 {
-			//TODO update token
+			Token :=
+				Controler.TokenGenerator() + Controler.TokenGenerator() +
+					Controler.TokenGenerator() + Controler.TokenGenerator() +
+					Controler.TokenGenerator() + Controler.TokenGenerator()
+			engine.Table(Struct.User{}).Omit("id", "username", "password", "created").
+				Update(Struct.User{Token: Token})
 			Response.Result = true
 			Response.Error = ""
+			Response.Token = Token
 		} else {
 			Response.Error = "username or password is wrong"
 		}
@@ -48,10 +58,10 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 	rw.Write([]byte(string(jsonData)))
 }
 
-func Authenticated(token string) (bool, int64) {
-	var id int64
+func Authenticated(token string) (bool, int) {
+	var id int
 	engine := Controler.GetEngine()
-	has, err := engine.Table("user").Where("token = ?", token).Cols("id").Get(&id)
+	has, err := engine.Table(Struct.User{}).Where(Struct.User{Token: token}).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true, id
 	}

@@ -2,37 +2,39 @@ package Struct
 
 import "time"
 
-type AdminMessage struct {
-	Id      int64     `xorm:"pk autoincr"`
-	UserId  int64     `xorm:"not null"`
-	AdminId int64     `xorm:"not null"`
-	Text    string    `xorm:"text not null"`
-	Created time.Time `xorm:"created"`
-	//TODO date
+type Message struct {
+	Id          int64     `xorm:"pk autoincr"`
+	UserId      int       `xorm:"not null"`
+	AnswerTo    int       `xorm:"not null"`
+	Text        string    `xorm:"text not null"`
+	FileAddress string    `xorm:"varchar(40)"`
+	Seen        bool
+	Created     time.Time `xorm:"created"`
 }
 
-func NewAdminMessage(userId, adminId int64, text string) *AdminMessage {
-	newMessage := new(AdminMessage)
+func NewMessage(userId, AnswerTo int, text, fileAddress string) *Message {
+	newMessage := new(Message)
 	newMessage.UserId = userId
-	newMessage.AdminId = adminId
+	newMessage.AnswerTo = AnswerTo
+	newMessage.FileAddress = fileAddress
+	newMessage.Seen = false
 	newMessage.Text = text
 	newMessage.Created = time.Now()
 	return newMessage
 }
 
-type UserMessage struct {
-	Id     int64 `xorm:"pk autoincr"`
-	UserId int64 `xorm:"not null"`
-	//UserId   int64     `xorm:"not null"`
-	Text    string    `xorm:"text not null"`
-	Created time.Time `xorm:"created"`
-}
-
-func NewUserMessage(userId int64, text string) *UserMessage {
-	newMessage := new(UserMessage)
-	newMessage.UserId = userId
-	newMessage.Text = text
-	newMessage.Created = time.Now()
-	return newMessage
-}
-
+//type UserMessage struct {
+//	Id     int64 `xorm:"pk autoincr"`
+//	UserId int64 `xorm:"not null"`
+//	//UserId   int64     `xorm:"not null"`
+//	Text    string    `xorm:"text not null"`
+//	Created time.Time `xorm:"created"`
+//}
+//
+//func NewUserMessage(userId int64, text string) *UserMessage {
+//	newMessage := new(UserMessage)
+//	newMessage.UserId = userId
+//	newMessage.Text = text
+//	newMessage.Created = time.Now()
+//	return newMessage
+//}

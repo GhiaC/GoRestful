@@ -26,15 +26,16 @@ func GetEngine() *xorm.Engine{
 		}
 
 		engine.CreateTables(&Struct.User{})
-		engine.CreateTables(&Struct.UserMessage{})
-		engine.CreateTables(&Struct.Admin{})
-		engine.CreateTables(&Struct.AdminMessage{})
+		//engine.CreateTables(&Struct.UserMessage{})
+		//engine.CreateTables(&Struct.Admin{})
+		//engine.CreateTables(&Struct.AdminMessage{})
 		engine.CreateTables(&Struct.Media{})
 		engine.CreateTables(&Struct.Subtitle{})
 		engine.CreateTables(&Struct.Title{})
-		engine.CreateTables(&Struct.UserPicture{})
-		engine.CreateTables(&Struct.AdminPicture{})
-		engine.CreateTables(&Struct.AdminFile{})
+		engine.CreateTables(&Struct.Picture{})
+		engine.CreateTables(&Struct.Message{})
+		//engine.CreateTables(&Struct.AdminPicture{})
+		engine.CreateTables(&Struct.File{})
 		engine.CreateTables(&Struct.News{})
 
 

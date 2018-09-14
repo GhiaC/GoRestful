@@ -5,11 +5,12 @@ import (
 	"GoRestful/Models"
 	"GoRestful/Controler"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
 
-	if ok, _ ,_:= Controler.Authenticated(r); !ok {
+	if ok, _, _ := Controler.Authenticated(r); !ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
@@ -18,8 +19,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		submit := r.PostForm.Get("submit")
 
 		vars := Models.LoginPageVariables{
-			Answer: "",
-			//Url:         "/register",
+			Answer:      "",
 			SubmitValue: "Add User",
 		}
 
@@ -29,9 +29,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewUser(username, password)
-			affected, err := engine.Table("user").Insert(newUser)
-			println(affected)
+			newUser := Struct.NewUser(username, password, 2) // type 2 = user
+			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
 			}
@@ -43,7 +42,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 func hasUser(username string) bool {
 	var id int
 	engine := Controler.GetEngine()
-	has, err := engine.Table("user").Where("username = ?", username).Cols("id").Get(&id)
+	has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Username": username}).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true
 	}
