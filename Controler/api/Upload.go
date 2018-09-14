@@ -20,8 +20,16 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+	Token := r.PostForm.Get("Token")
+	logged, id := Authenticated(Token)
+	if  !logged && !(id > 0) {
+		//TODO show error
+		return
+	}
 
 	file, handle, err := r.FormFile("file")
+	description := "User uploaded"
+
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
 		return
@@ -50,14 +58,11 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	saveFile(w, file, handle, &response)
 
-	if auth, _, id := Controler.Authenticated(r); auth && id > 0 {
-		engine := Controler.GetEngine()
-		//id, _ := strconv.Atoi(vars["id"])
-		newFile := Struct.NewFile(id, handle.Filename, fileKey)
-		engine.Table(Struct.Picture{}).Insert(newFile) //has result
-		response.FileName = fileKey
-		jsonResponse(w, http.StatusCreated, &response)
-	}
+	engine := Controler.GetEngine()
+	newFile := Struct.NewFile(id, handle.Filename, fileKey, description)
+	engine.Table(Struct.Picture{}).Insert(newFile) //has result
+	response.FileName = fileKey
+	jsonResponse(w, http.StatusCreated, &response)
 }
 
 func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader, response *Models.UploadFileResponse) {

@@ -11,6 +11,14 @@
                             <label for="usr">Subtitle :</label>
                             <input type="text" class="form-control" id="usr" name="username">
                         </div>
+                        <div class="form-group">
+                            <label for="pic1">Pic 1 :</label>
+                            <input type="text" class="form-control" id="pic1" name="pic1">
+                        </div>
+                        <div class="form-group">
+                            <label for="pic2">Pic 2 :</label>
+                            <input type="text" class="form-control" id="pic2" name="pic2">
+                        </div>
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
@@ -28,6 +36,9 @@
         <tr>
             <th>ID</th>
             <th>Title</th>
+            <th>Pic 1</th>
+            <th>Pic 2</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +46,8 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
+            <td>{{.Pic1}}</td>
+            <td>{{.Pic2}}</td>
             <td><a href="/admin/Media/{{.Id}}">Add Media</a></td>
         </tr>
         {{end}}

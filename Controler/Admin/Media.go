@@ -15,7 +15,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
-		//text := r.PostForm.Get("text")
+		picture := r.PostForm.Get("picture")
 		submit := r.PostForm.Get("submit")
 
 		result := Models.MediaLayerVariables{
@@ -28,7 +28,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		} else if text != "" {
 			engine := Controler.GetEngine()
 			id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewMedia(int64(id), text)
+			newUser := Struct.NewMedia(int64(id), text, picture)
 			affected, err := engine.Table(Struct.Media{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."

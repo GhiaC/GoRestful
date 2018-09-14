@@ -60,6 +60,7 @@ type MediaLayerVariables struct {
 }
 type AnswerLayerVariables struct {
 	Msg     AnswerQuery
+	Answers []AnswerQuery
 	TitleId string
 
 	Answer      string
@@ -80,5 +81,5 @@ type AdminFileLayerVariables struct {
 }
 
 type MessagesLayerVariables struct {
-	Messages [] Struct.Message
+	Messages [] AnswerQuery
 }

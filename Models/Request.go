@@ -6,6 +6,7 @@ type LoginRequest struct {
 }
 
 type SendMessageRequest struct {
-	Token string
-	Text  string
+	FileAddress string
+	Token       string
+	Text        string
 }

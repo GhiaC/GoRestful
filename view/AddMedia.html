@@ -7,13 +7,13 @@
                     {{.Answer}}
                     </div>
                     <form method="post">
-                        {{/*<div class="form-group">*/}}
-                            {{/*<label for="usr">Subtitle :</label>*/}}
-                            {{/*<input type="text" class="form-control" id="usr" name="username">*/}}
-                        {{/*</div>*/}}
                         <div class="form-group">
                             <label for="text">Text :</label>
                             <textarea class="form-control" id="text" name="text"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="picture">Picture :</label>
+                            <input type="text" class="form-control" id="picture" name="picture">
                         </div>
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
@@ -32,6 +32,7 @@
         <tr>
             <th>ID</th>
             <th>Media</th>
+            <th>Picture</th>
         </tr>
         </thead>
         <tbody>
@@ -39,6 +40,7 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Text}}</td>
+            <td>{{.Picture}}</td>
         </tr>
         {{end}}
         </tbody>

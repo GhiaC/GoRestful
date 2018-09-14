@@ -29,7 +29,6 @@ func UploadPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func UploadPicture(w http.ResponseWriter, r *http.Request) {
 	uploadFile(w, r, Struct.Picture{})
 }
@@ -48,6 +47,8 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 	}
 
 	file, handle, err := r.FormFile("file")
+	description := r.PostForm.Get("description")
+
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
 		return
@@ -79,7 +80,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 	if auth, _, id := Controler.Authenticated(r); auth && id > 0 {
 		engine := Controler.GetEngine()
 		//id, _ := strconv.Atoi(vars["id"])
-		newFile := Struct.NewFile(id, handle.Filename, fileKey)
+		newFile := Struct.NewFile(id, handle.Filename, fileKey,description)
 		engine.Table(table).Insert(newFile) //has result
 		response.FileName = fileKey
 		jsonResponse(w, http.StatusCreated, &response)

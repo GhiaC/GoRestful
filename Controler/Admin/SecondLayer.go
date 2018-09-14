@@ -16,10 +16,12 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
 		submit := r.PostForm.Get("submit")
+		pic1 := r.PostForm.Get("pic1")
+		pic2 := r.PostForm.Get("pic2")
 		id, _ := strconv.Atoi(vars["id"])
 
 		result := Models.SecondLayerVariables{
-			Answer: "",
+			Answer:      "",
 			SubmitValue: "Add Subtitle",
 		}
 
@@ -27,11 +29,12 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 			result.Answer = "text is empty"
 		} else if username != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewSubtitle(int64(id), username)
+			newUser := Struct.NewSubtitle(int64(id), username, pic1, pic2)
 			affected, err := engine.Table(Struct.Subtitle{}).Insert(newUser)
-			println(affected)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
+			}else {
+				result.Answer = "Database Problem!"
 			}
 		}
 

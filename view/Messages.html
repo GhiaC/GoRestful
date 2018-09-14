@@ -4,7 +4,9 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>Username</th>
             <th>Text</th>
+            <th>File</th>
             <th>Created Date</th>
             <th>Answer</th>
         </tr>
@@ -12,8 +14,10 @@
         <tbody>
         {{range .Messages}}
         <tr>
-            <td>{{.UserId}}</td>
+            <td>{{.Id}}</td>
+            <td>{{.Username}}</td>
             <td>{{.Text}}</td>
+            <td>{{.FileAddress}}</td>
             <td>{{.Created}}</td>
             <td><a href="/admin/message/answer/{{.Id}}">Answer</a></td>
         </tr>

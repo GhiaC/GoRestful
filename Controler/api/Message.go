@@ -19,6 +19,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 	}
 	token := decodedRequest.Token
 	text := decodedRequest.Text
+	FileAddress := decodedRequest.FileAddress
 	Response := Models.SendMessageResponse{
 		Error:     "token isn't valid.",
 		Result:    false,
@@ -30,7 +31,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 			Response.Error = "Message is empty"
 		} else {
 			engine := Controler.GetEngine()
-			newMessage := Struct.NewMessage(id, 0, text)
+			newMessage := Struct.NewMessage(id, 0, text,FileAddress)
 			affected, err := engine.Table(Struct.Message{}).Insert(newMessage)
 			if affected > 0 && err == nil {
 				Response.Result = true

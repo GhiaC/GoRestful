@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"GoRestful/Models"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +41,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func hasUser(username string) bool {
 	var id int
 	engine := GetEngine()
-	has, err := engine.Table(Struct.User{}).Where(Struct.User{Username:username}).Cols("id").Get(&id)
+	has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Username": username}).Cols("id").Get(&id)
 	if has && err == nil && id > 0 {
 		return true
 	}

@@ -1,14 +1,29 @@
 <div class="well">
     <div class="jumbotron">
         <div class="container">
-            <form id="upload_form" enctype="multipart/form-data" method="post">
-                <input type="file" name="file" id="file"><br>
-                <input type="button" value="Upload File" onclick="uploadFile()">
-                <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
-                <h3 id="status"></h3>
-                <p id="loaded_n_total"></p>
-            </form>
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <form id="upload_form" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label for="Description">Description :</label>
+                            <input type="text" class="form-control" id="Description" name="description">
+                        </div>
 
+                        <input type="file" name="file" id="file"><br>
+
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
+                                 aria-valuenow="40"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                <span id="loaded_n_total"></span>
+                            </div>
+                        </div>
+                        <h3 id="status"></h3>
+                        <input type="button" class="btn col-sm-12 btn-success btn-sm" value="Upload File"
+                               onclick="uploadFile()">
+                    </form>
+                </div>
+            </div>
             <script>
                 /* Script written by Adam Khoury @ DevelopPHP.com */
                 /* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
@@ -26,20 +41,21 @@
                     ajax.addEventListener("load", completeHandler, false);
                     ajax.addEventListener("error", errorHandler, false);
                     ajax.addEventListener("abort", abortHandler, false);
-                    ajax.open("POST", "/api/ticket/upload/picture");
+                    ajax.open("POST", "/admin/upload/file");
                     ajax.send(formdata);
                 }
 
                 function progressHandler(event) {
                     _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
                     var percent = (event.loaded / event.total) * 100;
-                    _("progressBar").value = Math.round(percent);
+                    $("#progressBar").css({"width": Math.round(percent) + "%"});
                     _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
                 }
 
                 function completeHandler(event) {
-                    _("status").innerHTML = event.target.responseText;
-                    _("progressBar").value = 0;
+                    response = JSON.parse(event.target.responseText);
+                    _("status").innerHTML = response.Error;
+                    $("#progressBar").css({"width": "100%"});
                 }
 
                 function errorHandler(event) {
@@ -64,15 +80,19 @@
             <th>ID</th>
             <th>Admin Name</th>
             <th>File Address</th>
+            <th>Description</th>
+            <th>Key</th>
             <th>Created Date</th>
         </tr>
         </thead>
         <tbody>
         {{range .Files}}
-        <tr>
+        <tr>description
             <td>{{.Id}}</td>
-            <td>{{.AdminId}}</td>
+            <td>{{.UserId}}</td>
             <td>{{.FileName}}</td>
+            <td>{{.Description}}</td>
+            <td>{{.Key}}</td>
             <td>{{.Created}}</td>
         </tr>
         {{end}}

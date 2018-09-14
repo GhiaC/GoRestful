@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"GoRestful/Models"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func Authenticated(r *http.Request) (bool, string, int) {
@@ -32,7 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else if username != "" && password != "" {
 		var id int
 		engine := GetEngine()
-		has, err := engine.Table(Struct.User{}).Where(Struct.User{Username:username,Password:password}).Cols("id").Get(&id)
+		has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Username":username,"Password":password,"Type":1}).Cols("id").Get(&id)
 		if has && err == nil && id > 0 {
 			session, _ := Store.Get(r, "cookie-name")
 			session.Values["authenticated"] = true
