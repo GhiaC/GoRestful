@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	_ "github.com/go-sql-driver/mysql"
 	"time"
 	"GoRestful/Controler"
 	"GoRestful/Models"
