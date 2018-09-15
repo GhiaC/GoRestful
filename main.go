@@ -65,7 +65,7 @@ func main() {
 	r.HandleFunc("/file/", Controler.HandleClient)
 
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":8088", nil))
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
