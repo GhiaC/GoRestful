@@ -19,7 +19,7 @@
                         <td>{{.Msg.Username}}</td>
                         <td>{{.Msg.Text}}</td>
                         <td>
-                            <img style="width: 100px" src="http://localhost:8088/file/?file={{.Msg.FileAddress}}"
+                            <img style="width: 100px" src="{{.Server}}/file/?file={{.Msg.FileAddress}}"
                                  alt="No Pic">
                         </td>
                         <td>{{.Msg.Created}}</td>
@@ -46,7 +46,7 @@
                         <td>{{.Username}}</td>
                         <td>{{.Text}}</td>
                         <td>
-                            <img style="width: 100px" src="http://localhost:8088/file/?file={{.FileAddress}}"
+                            <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.FileAddress}}"
                                  alt="No Pic"></td>
                         <td>{{.Created}}</td>
                     </tr>
