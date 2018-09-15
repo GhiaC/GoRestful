@@ -2,21 +2,35 @@
     <div class="jumbotron">
         <div class="container">
             <div class="row" id="resume">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-sm-offset-1 col-sm-9">
                     <div class="alert-danger">
                     {{.Answer}}
                     </div>
                     <form method="post">
                         <div class="form-group">
                             <label for="text">Text :</label>
-                            <textarea class="form-control" id="text" name="text"></textarea>
+                            <div id="toolbar-container"></div>
+                            <textarea class="form-control" id="editor" name="text"></textarea>
+                            <script>
+                                DecoupledEditor
+                                        .create(document.querySelector('#editor'))
+                                        .then(editor => {
+                                            const toolbarContainer = document.querySelector('#toolbar-container');
+
+                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+                                        })
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
+                            </script>
                         </div>
                         <div class="form-group">
                             <label for="picture">Picture :</label>
                             <input type="text" class="form-control" id="picture" name="picture">
                         </div>
                         <div class="from-group">
-                            <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                            <button type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
                 </div>
@@ -40,7 +54,7 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Text}}</td>
-            <td>{{.Picture}}</td>
+            <td><img src="http://localhost:8088/file/?file={{.Picture}}"></td>
         </tr>
         {{end}}
         </tbody>

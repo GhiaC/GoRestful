@@ -3,15 +3,15 @@ package Struct
 import "time"
 
 type Picture struct {
-	Id       int64     `xorm:"pk autoincr"`
-	UserId   int
-	FileName string    `xorm:"varchar(256) unique not null"`
+	Id          int64     `xorm:"pk autoincr"`
+	UserId      int
+	FileName    string    `xorm:"varchar(256) unique not null"`
 	Description string    `xorm:"text not null"`
-	Key      string    `xorm:"varchar(40) unique not null"`
-	Created  time.Time `xorm:"created"`
+	Key         string    `xorm:"varchar(40) unique not null"`
+	Created     time.Time `xorm:"created"`
 }
 
-func NewPicture(userId int, fileName, key ,description string) *Picture {
+func NewPicture(userId int, fileName, key, description string) *Picture {
 	newPicture := new(Picture)
 	newPicture.UserId = userId
 	newPicture.FileName = fileName

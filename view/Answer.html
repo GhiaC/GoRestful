@@ -2,15 +2,30 @@
     <div class="jumbotron">
         <div class="container">
             <div class="row">
-                <div class="col-sm-offset-2 col-sm-8">
-                    ID : {{.Msg.Id}}
-                    <br>
-                    Username : {{.Msg.Username}}
-                    <br>
-                    Text : {{.Msg.Text}}
-                    <br>
-                    Created : {{.Msg.Created}}
-                </div>
+                <h2>Question</h2>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Text</th>
+                        <th>File</th>
+                        <th>Created Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>#{{.Msg.Id}}</td>
+                        <td>{{.Msg.Username}}</td>
+                        <td>{{.Msg.Text}}</td>
+                        <td>
+                            <img style="width: 100px" src="http://localhost:8088/file/?file={{.Msg.FileAddress}}"
+                                 alt="No Pic">
+                        </td>
+                        <td>{{.Msg.Created}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="row">
                 <h2>Answers</h2>
@@ -27,10 +42,12 @@
                     <tbody>
                     {{range .Answers}}
                     <tr>
-                        <td>{{.Id}}</td>
+                        <td>#{{.Id}}</td>
                         <td>{{.Username}}</td>
                         <td>{{.Text}}</td>
-                        <td>{{.FileAddress}}</td>
+                        <td>
+                            <img style="width: 100px" src="http://localhost:8088/file/?file={{.FileAddress}}"
+                                 alt="No Pic"></td>
                         <td>{{.Created}}</td>
                     </tr>
                     {{end}}
@@ -54,7 +71,8 @@
                         <input type="file" name="file" id="file"><br>
 
                         <div class="progress">
-                            <div id="progressBar"  class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+                            <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
+                                 aria-valuenow="40"
                                  aria-valuemin="0" aria-valuemax="100" style="width:0%">
                                 <span id="loaded_n_total"></span>
                             </div>
@@ -66,12 +84,25 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-sm-offset-1 col-sm-10">
                     <form method="post">
                         <input type="hidden" name="fileaddress" id="fileaddress">
                         <div class="form-group">
-                            <label for="text">Text :</label>
-                            <textarea class="form-control" id="text" name="text"></textarea>
+                            <label for="editor">Text :</label>
+                            <div id="toolbar-container"></div>
+                            <textarea class="form-control" id="editor" name="text"></textarea>
+                            <script>
+                                DecoupledEditor
+                                        .create(document.querySelector('#editor'))
+                                        .then(editor => {
+                                            const toolbarContainer = document.querySelector('#toolbar-container');
+
+                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+                                        })
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
+                            </script>
                         </div>
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}"
@@ -108,7 +139,7 @@
     function progressHandler(event) {
         _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
         var percent = (event.loaded / event.total) * 100;
-        $("#progressBar").css({"width":Math.round(percent)+"%"});
+        $("#progressBar").css({"width": Math.round(percent) + "%"});
         _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
     }
 
@@ -116,7 +147,7 @@
         response = JSON.parse(event.target.responseText);
         _("fileaddress").value = response.FileName;
         _("status").innerHTML = response.Error;
-        $("#progressBar").css({"width":"100%"});
+        $("#progressBar").css({"width": "100%"});
     }
 
     function errorHandler(event) {

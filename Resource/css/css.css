@@ -21,9 +21,22 @@
     margin-left: -62px;
 }
 
-body {
-    background: url(/Resource/pic/UoQbFHi.jpg) 100% 100% fixed;
+.bg {
+    top:0;
+    z-index:-1;
+    width: 100% !important;
+    height: 100% !important;;
+    position: fixed !important;;
+    /*float: right !important;;*/
+    background-image: url("/Resource/pic/image");
+    background-size: cover;
+    /*background-size: contain;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: right top;*/
 }
+/*body {*/
+    /*background: url(/Resource/pic/UoQbFHi.jpg) 100% 100% fixed;*/
+/*}*/
 
 .footer {
     padding: 15px 0px 10px 0px;

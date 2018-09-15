@@ -5,21 +5,42 @@ import (
 	"strconv"
 	"io"
 	"os"
-	"fmt"
+	"GoRestful/Models/Struct"
+	//"github.com/go-xorm/builder"
 )
 
 func HandleClient(writer http.ResponseWriter, request *http.Request) {
 	//First of check if Get is set in the URL
 	Filename := request.URL.Query().Get("file")
+
+	if Filename == ""{
+		return
+	}
+	var get [] Struct.Picture
+
+	GetEngine().
+		Table(Struct.File{}).
+		AllCols().Where("file.key = ?", Filename).
+		Find(&get)
+
+	if len(get) == 0 {
+		GetEngine().
+			Table(Struct.Picture{}).
+			AllCols().Where("picture.key = ?", Filename).
+			Find(&get)
+	}
+
+	Filename = get[0].FileName
+
 	if Filename == "" {
 		//Get not set, send a 400 bad request
 		http.Error(writer, "Get 'file' not specified in url.", 400)
 		return
 	}
-	fmt.Println("Client requests: " + Filename)
+	//fmt.Println("Client requests: " + Filename)
 
 	//Check if file exists and open
-	Openfile, err := os.Open(Filename)
+	Openfile, err := os.Open("./files/" + Filename)
 	defer Openfile.Close() //Close after function return
 	if err != nil {
 		//File not found, send 404

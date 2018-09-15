@@ -15,6 +15,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
+		//Phonenumber := r.PostForm.Get("Phonenumber")
+		//name := r.PostForm.Get("name")
 		password := r.PostForm.Get("password")
 		submit := r.PostForm.Get("submit")
 

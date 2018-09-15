@@ -1,7 +1,5 @@
 package Models
 
-import "GoRestful/Models/Struct"
-
 type LoginResponse struct {
 	Result bool
 	Token  string
@@ -13,9 +11,9 @@ type SendMessageResponse struct {
 	MessageId int64
 }
 type GetMessageResponse struct {
-	Result        bool
-	Error         string
-	Messages  []Struct.Message
+	Result   bool
+	Error    string
+	Messages []AnswerQuery
 }
 
 type UploadFileResponse struct {

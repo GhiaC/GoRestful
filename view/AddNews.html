@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="container">
             <div class="row" id="resume">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-sm-offset-1 col-sm-10">
                     <div class="alert-danger">
                     {{.Answer}}
                     </div>
@@ -12,11 +12,25 @@
                             <input type="text" class="form-control" id="usr" name="filename">
                         </div>
                         <div class="form-group">
-                            <label for="text">Text :</label>
-                            <textarea class="form-control" id="text" name="text"></textarea>
+                            <label for="editor">Text :</label>
+                            <div id="toolbar-container"></div>
+                            <textarea class="form-control" id="editor" name="text"></textarea>
+                            <script>
+                                DecoupledEditor
+                                        .create(document.querySelector('#editor'))
+                                        .then(editor => {
+                                            const toolbarContainer = document.querySelector('#toolbar-container');
+
+                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+                                        })
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
+                            </script>
                         </div>
                         <div class="from-group">
-                            <button name="submit" type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                            <button name="submit" type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
                 </div>
@@ -41,7 +55,7 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Text}}</td>
-            <td>{{.FileName}}</td>
+            <td><img src="http://localhost:8088/file/?file={{.FileName}}"></td>
             <td>{{.Created}}</td>
         </tr>
         {{end}}

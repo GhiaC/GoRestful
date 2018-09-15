@@ -20,7 +20,8 @@
                             <input type="text" class="form-control" id="pic2" name="pic2">
                         </div>
                         <div class="from-group">
-                            <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                            <button type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
                 </div>
@@ -46,8 +47,14 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
-            <td>{{.Pic1}}</td>
-            <td>{{.Pic2}}</td>
+            <td>
+                <img style="width: 100px" src="http://localhost:8088/file/?file={{.Pic1}}"
+                     alt="No Pic">
+            </td>
+            <td>
+                <img style="width: 100px" src="http://localhost:8088/file/?file={{.Pic2}}"
+                     alt="No Pic">
+            </td>
             <td><a href="/admin/Media/{{.Id}}">Add Media</a></td>
         </tr>
         {{end}}

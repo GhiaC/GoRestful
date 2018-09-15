@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"log"
 	"GoRestful/Models/Struct"
+	"github.com/go-xorm/builder"
 )
 
 func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
@@ -31,7 +32,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 			Response.Error = "Message is empty"
 		} else {
 			engine := Controler.GetEngine()
-			newMessage := Struct.NewMessage(id, 0, text,FileAddress)
+			newMessage := Struct.NewMessage(id, 0, text, FileAddress)
 			affected, err := engine.Table(Struct.Message{}).Insert(newMessage)
 			if affected > 0 && err == nil {
 				Response.Result = true
@@ -69,9 +70,11 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 		Result: false,
 	}
 	if logged {
-		var messages []Struct.Message
-		Controler.GetEngine().Table(Struct.Message{}).AllCols().
-			Where(Struct.Message{UserId: userid}).Or(Struct.Message{AnswerTo: userid}).
+		var messages []Models.AnswerQuery
+		Controler.GetEngine().Table(Struct.Message{}).
+			Select("user.username,message.*").
+			Join("INNER", Struct.User{}, "message.user_id = user.id ").
+			Where(builder.Eq{"user_id": userid}).Or(builder.Eq{"answer_to": userid}).
 			Find(&messages)
 
 		Response.Result = true

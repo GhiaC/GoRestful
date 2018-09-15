@@ -87,10 +87,10 @@
         </thead>
         <tbody>
         {{range .Files}}
-        <tr>description
+        <tr>
             <td>{{.Id}}</td>
             <td>{{.UserId}}</td>
-            <td>{{.FileName}}</td>
+            <td><img style="width: 100px" alt="No Pic" src="http://localhost:8088/file/?file={{.Key}}"></td>
             <td>{{.Description}}</td>
             <td>{{.Key}}</td>
             <td>{{.Created}}</td>
