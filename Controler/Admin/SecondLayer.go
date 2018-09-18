@@ -17,7 +17,7 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		username := r.PostForm.Get("username")
 		submit := r.PostForm.Get("submit")
 		pic1 := r.PostForm.Get("pic1")
-		pic2 := r.PostForm.Get("pic2")
+		//pic2 := r.PostForm.Get("pic2")
 		id, _ := strconv.Atoi(vars["id"])
 
 		result := Models.SecondLayerVariables{
@@ -29,24 +29,25 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 			result.Answer = "text is empty"
 		} else if username != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewSubtitle(int64(id), username, pic1, pic2)
+			newUser := Struct.NewSubtitle(int64(id), username, pic1)
 			affected, err := engine.Table(Struct.Subtitle{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
-			}else {
+			} else {
 				result.Answer = "Database Problem!"
 			}
 		}
 
 		var subtitles []Struct.Subtitle
-		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"TitleId": int64(id)}).Find(&subtitles)
+		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"Pid": int64(id)}).
+			Find(&subtitles)
 
 		result.Subtitles = subtitles
 		Controler.OpenTemplate(w, r, result, "SecondLayer.html", Models.HeaderVariables{Title: "SecondLayer"})
 
 	} else if ok, _, _ := Controler.Authenticated(r); ok {
 		var subtitles []Struct.Subtitle
-		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"title_id": vars["id"]}).Find(&subtitles)
+		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"Pid": vars["id"]}).Find(&subtitles)
 
 		result := Models.SecondLayerVariables{
 			TitleId:     vars["id"],

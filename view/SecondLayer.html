@@ -15,10 +15,10 @@
                             <label for="pic1">Pic 1 :</label>
                             <input type="text" class="form-control" id="pic1" name="pic1">
                         </div>
-                        <div class="form-group">
-                            <label for="pic2">Pic 2 :</label>
-                            <input type="text" class="form-control" id="pic2" name="pic2">
-                        </div>
+                    {{/*<div class="form-group">*/}}
+                    {{/*<label for="pic2">Pic 2 :</label>*/}}
+                    {{/*<input type="text" class="form-control" id="pic2" name="pic2">*/}}
+                    {{/*</div>*/}}
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}"
                                     class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
@@ -38,7 +38,7 @@
             <th>ID</th>
             <th>Title</th>
             <th>Pic 1</th>
-            <th>Pic 2</th>
+        {{/*<th>Pic 2</th>*/}}
             <th></th>
         </tr>
         </thead>
@@ -48,13 +48,13 @@
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
             <td>
-                <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Pic1}}"
+                <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Picture}}"
                      alt="No Pic">
             </td>
-            <td>
-                <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Pic2}}"
-                     alt="No Pic">
-            </td>
+        {{/*<td>*/}}
+        {{/*<img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Pic2}}"*/}}
+        {{/*alt="No Pic">*/}}
+        {{/*</td>*/}}
             <td><a href="/admin/Media/{{.Id}}">Add Media</a></td>
         </tr>
         {{end}}

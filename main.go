@@ -29,9 +29,12 @@ func main() {
 	s1 := r.PathPrefix("/api").Subrouter()
 	{
 		s1.HandleFunc("/titles", api.Titles)                  //DONE
-		s1.HandleFunc("/subtitles", api.AllMedia)             //DONE
+		s1.HandleFunc("/subtitles", api.AllSubTitles)         //DONE
 		s1.HandleFunc("/subtitle/{id:[0-9]+}", api.SubTitles) //DONE
 		s1.HandleFunc("/media/{id:[0-9]+}", api.Media)        //DONE
+		s1.HandleFunc("/medias", api.AllMedia)                //DONE
+		s1.HandleFunc("/submedia/{id:[0-9]+}", api.SubMedia)  //DONE
+		s1.HandleFunc("/submedias", api.AllSubMedia)          //DONE
 		s1.HandleFunc("/login", api.Login)                    //DONE
 		s1.HandleFunc("/aboutus", api.SubTitles)              //TODO
 		s1.HandleFunc("/news", api.AllNews)                   //DONE
@@ -50,6 +53,7 @@ func main() {
 		s2.HandleFunc("/FirstLayer", Admin.FirstLayer)               //DONE
 		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer) //DONE
 		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media)             //DONE
+		s2.HandleFunc("/SubMedia/{id:[0-9]+}", Admin.SubMedia)       //DONE
 		s2.HandleFunc("/adduser", Admin.AddUser)                     //DONE
 		s2.HandleFunc("/users", Admin.StatusOfUsers)                 //DONE
 		s2.HandleFunc("/admins", Admin.StatusOfAdmins)               //DONE

@@ -3,45 +3,62 @@ package Struct
 import "time"
 
 type Title struct {
-	Id    int64  `xorm:"pk autoincr"`
-	Title string `xorm:"varchar(256) unique not null"`
+	Id      int64  `xorm:"pk autoincr"`
+	Title   string `xorm:"varchar(256) unique not null"`
+	Picture string `xorm:"varchar(256) not null"`
 }
 
-func NewTitle(title string) *Title {
+func NewTitle(title, picture string) *Title {
 	newUser := new(Title)
 	newUser.Title = title
+	newUser.Picture = picture
 	return newUser
 }
 
 type Subtitle struct {
+	//changed
 	Id      int64  `xorm:"pk autoincr"`
-	TitleId int64
+	Pid     int64
 	Title   string `xorm:"varchar(256) not null"`
-	Pic1    string `xorm:"varchar(256) not null"`
-	Pic2    string `xorm:"varchar(256) not null"`
+	Picture string `xorm:"varchar(256) not null"`
 }
 
-func NewSubtitle(titleId int64, title, pic1, pic2 string) *Subtitle {
+func NewSubtitle(pid int64, title, picture string) *Subtitle {
 	newUser := new(Subtitle)
-	newUser.TitleId = titleId
-	newUser.Pic1 = pic1
-	newUser.Pic2 = pic2
-	newUser.TitleId = titleId
+	newUser.Pid = pid
+	newUser.Picture = picture
 	newUser.Title = title
 	return newUser
 }
 
 type Media struct {
-	Id         int64  `xorm:"pk autoincr"`
-	Subtitleid int64  `xorm:"index"`
-	Picture    string `xorm:"varchar(256) not null"`
-	Text       string `xorm:"text not null"`
+	//Changed
+	Id      int64  `xorm:"pk autoincr"`
+	Pid     int64
+	Picture string `xorm:"varchar(256) not null"`
+	Title   string `xorm:"text not null"`
 }
 
-func NewMedia(subtitleid int64, Text,Picture string) *Media {
+func NewMedia(pid int64, Title, picture string) *Media { //changed
 	newUser := new(Media)
-	newUser.Subtitleid = subtitleid
-	newUser.Picture = Picture
+	newUser.Pid = pid
+	newUser.Picture = picture
+	newUser.Title = Title
+	return newUser
+}
+
+type SubMedia struct {
+	//Changed
+	Id   int64  `xorm:"pk autoincr"`
+	Pid  int64
+	Url  string `xorm:"varchar(256) not null"`
+	Text string `xorm:"text not null"`
+}
+
+func NewSubMedia(pid int64, picture, Text string) *SubMedia { //changed
+	newUser := new(SubMedia)
+	newUser.Pid = pid
+	newUser.Url = picture
 	newUser.Text = Text
 	return newUser
 }

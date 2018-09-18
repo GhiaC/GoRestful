@@ -12,8 +12,9 @@ import (
 func Media(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var users []Struct.Media
-	Controler.GetEngine().Table(Struct.Media{}).Select("media.*,subtitle.*").
-		Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").Where("subtitleid = ?", vars["id"]).Find(&users)
+	Controler.GetEngine().Table(Struct.Media{}).AllCols().
+	//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.Pid ").
+		Where("pid = ?", vars["id"]).Find(&users)
 	var jsonData []byte
 
 	jsonData, err := json.Marshal(users)
@@ -25,12 +26,12 @@ func Media(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(string(jsonData)))
 }
 
-
 func AllMedia(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
 	var users []Struct.Media
-	Controler.GetEngine().Table(Struct.Media{}).Select("media.*,subtitle.*").
-		Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").Find(&users)
+	Controler.GetEngine().Table(Struct.Media{}).AllCols().
+	//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").
+		Find(&users)
 	var jsonData []byte
 
 	jsonData, err := json.Marshal(users)

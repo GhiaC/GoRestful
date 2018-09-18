@@ -13,7 +13,7 @@ var engine *xorm.Engine
 var flag bool
 
 const userDB = "root"
-const passDB  = ""
+const passDB  = "mghiasi"
 const nameDB  = "restful"
 
 func GetEngine() *xorm.Engine{
@@ -33,6 +33,7 @@ func GetEngine() *xorm.Engine{
 		engine.CreateTables(&Struct.Subtitle{})
 		engine.CreateTables(&Struct.Title{})
 		engine.CreateTables(&Struct.Picture{})
+		engine.CreateTables(&Struct.SubMedia{})
 		engine.CreateTables(&Struct.Message{})
 		//engine.CreateTables(&Struct.AdminPicture{})
 		engine.CreateTables(&Struct.File{})

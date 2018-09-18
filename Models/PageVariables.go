@@ -58,6 +58,15 @@ type MediaLayerVariables struct {
 	//Url         string
 	SubmitValue string
 }
+
+type SubMediaLayerVariables struct {
+	SubMedias  [] Struct.SubMedia
+	TitleId string
+
+	Answer string
+	//Url         string
+	SubmitValue string
+}
 type AnswerLayerVariables struct {
 	Msg     AnswerQuery
 	Answers []AnswerQuery

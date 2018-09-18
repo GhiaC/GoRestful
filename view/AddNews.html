@@ -14,22 +14,17 @@
                         <div class="form-group">
                             <label for="editor">Text :</label>
                             <div id="toolbar-container"></div>
-                            <textarea class="form-control" id="editor" name="text"></textarea>
+                            <div style="height: 300px" class="form-control" id="editor"></div>
+                            <input type="hidden" name="text" id="dash_new_shout_textarea_hidden">
                             <script>
-                                DecoupledEditor
-                                        .create(document.querySelector('#editor'))
-                                        .then(editor => {
-                                            const toolbarContainer = document.querySelector('#toolbar-container');
-
-                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-                                        })
-                                        .catch(error => {
-                                            console.error(error);
-                                        });
+                                setInterval(function () {
+                                    document.getElementById("dash_new_shout_textarea_hidden").value = document.getElementById("editor").innerHTML;
+                                }, 5);
                             </script>
                         </div>
                         <div class="from-group">
-                            <button name="submit" type="submit" value="{{.SubmitValue}}"
+                            <button name="submit" type="submit"
+                                    value="{{.SubmitValue}}"
                                     class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
@@ -62,3 +57,15 @@
         </tbody>
     </table>
 </div>
+<script>
+    DecoupledEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                const toolbarContainer = document.querySelector('#toolbar-container');
+
+                toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+</script>

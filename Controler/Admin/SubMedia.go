@@ -2,15 +2,15 @@ package Admin
 
 import (
 	"net/http"
+	"github.com/gorilla/mux"
 	"GoRestful/Controler"
 	"GoRestful/Models"
-	"github.com/gorilla/mux"
 	"strconv"
 	"GoRestful/Models/Struct"
 	"github.com/go-xorm/builder"
 )
 
-func Media(w http.ResponseWriter, r *http.Request) {
+func SubMedia(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
@@ -18,9 +18,9 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		picture := r.PostForm.Get("picture")
 		submit := r.PostForm.Get("submit")
 
-		result := Models.MediaLayerVariables{
+		result := Models.SubMediaLayerVariables{
 			Answer:      "",
-			SubmitValue: "Add Media",
+			SubmitValue: "Add SubMedia",
 		}
 
 		if submit != "" && (text == "") {
@@ -28,36 +28,35 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		} else if text != "" {
 			engine := Controler.GetEngine()
 			id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewMedia(int64(id), text, picture)
-			affected, err := engine.Table(Struct.Media{}).Insert(newUser)
+			newUser := Struct.NewSubMedia(int64(id), text, picture)
+			affected, err := engine.Table(Struct.SubMedia{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
 			}
 		}
 
-		var medias []Struct.Media
-		Controler.GetEngine().Table(Struct.Media{}).AllCols().
-			//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.pid ").
+		var SubMedias []Struct.SubMedia
+		Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().
 			Where(builder.Eq{"pid": vars["id"]}).
-			Find(&medias)
+			Find(&SubMedias)
 
-		result.Medias = medias
-		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
+		result.SubMedias = SubMedias
+		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedias"})
 
 	} else if ok, _, _ := Controler.Authenticated(r); ok {
 
-		var medias []Struct.Media
-		Controler.GetEngine().Table(Struct.Media{}).AllCols().
+		var medias []Struct.SubMedia
+		Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().
 			Where(builder.Eq{"pid": vars["id"]}).
 			Find(&medias)
 
-		result := Models.MediaLayerVariables{
+		result := Models.SubMediaLayerVariables{
 			TitleId:     vars["id"],
-			Medias:      medias,
+			SubMedias:      medias,
 			Answer:      "",
-			SubmitValue: "Add Media",}
+			SubmitValue: "Add SubMedia",}
 
-		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Media"})
+		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedia"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
