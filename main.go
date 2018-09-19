@@ -3,9 +3,7 @@ package main
 import (
 	"net/http"
 	_ "github.com/go-sql-driver/mysql"
-	"time"
 	"GoRestful/Controler"
-	"GoRestful/Models"
 	"log"
 	"GoRestful/Controler/api"
 	"github.com/gorilla/mux"
@@ -13,10 +11,9 @@ import (
 	"fmt"
 	"github.com/nytimes/gziphandler"
 	"github.com/tkanos/gonfig"
-)
-
-const (
-	STATIC_DIR = "/files/"
+	"strings"
+	"runtime/debug"
+	"os"
 )
 
 func main() {
@@ -77,26 +74,27 @@ func main() {
 	r.HandleFunc("/file/", Controler.HandleClient)
 
 	r.NotFoundHandler = http.HandlerFunc(notFoundHandler)
-	http.Handle("/", gziphandler.GzipHandler(r))
-	log.Fatal(http.ListenAndServe(":"+Controler.Configuration.Port, nil))
+
+	//http.Handle("/",Controler.Configuration.Port)
+
+	// Now use the logger with your http.Server:
+	logger := log.New(debugLogger{}, "", 0)
+
+	server := &http.Server{
+		Addr:     ":"+Controler.Configuration.Port,
+		Handler:  gziphandler.GzipHandler(r),
+		ErrorLog: logger,
+	}
+	log.Fatal(server.ListenAndServe())
+
 }
 
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
-	fmt.Fprintf(w, "404 - Not Found!\n")
-}
+type debugLogger struct{}
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
-
-	now := time.Now() // find the time right now
-	HomePageVars := Models.HomePageVariables{//store the date and time in a struct
-		Date: now.Format("02-01-2006"),
-		Time: now.Format("15:04:05"),
-		LoginStatus: "you aren't logged in",
+func (d debugLogger) Write(p []byte) (n int, err error) {
+	s := string(p)
+	if strings.Contains(s, "multiple response.WriteHeader") {
+		debug.PrintStack()
 	}
-	if ok, username, _ := Controler.Authenticated(r); ok {
-		HomePageVars.LoginStatus = "dear " + username + ", you are logged in"
-	}
-
-	Controler.OpenTemplate(w, r, HomePageVars, "homepage.html", Models.HeaderVariables{Title: "Authentication GO"})
+	return os.Stderr.Write(p)
 }
