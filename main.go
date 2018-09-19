@@ -9,11 +9,10 @@ import (
 	"github.com/gorilla/mux"
 	"GoRestful/Controler/Admin"
 	"fmt"
-	"github.com/nytimes/gziphandler"
+	//"github.com/nytimes/gziphandler"
 	"github.com/tkanos/gonfig"
-	"strings"
-	"runtime/debug"
-	"os"
+	"time"
+	"GoRestful/Models"
 )
 
 func main() {
@@ -72,29 +71,37 @@ func main() {
 	}
 
 	r.HandleFunc("/file/", Controler.HandleClient)
-
 	r.NotFoundHandler = http.HandlerFunc(notFoundHandler)
+	http.Handle("/", r)
 
-	//http.Handle("/",Controler.Configuration.Port)
+	log.Fatal(http.ListenAndServe(":"+Controler.Configuration.Port, nil))
+}
+//type debugLogger struct{}
+//
+//func (d debugLogger) Write(p []byte) (n int, err error) {
+//	s := string(p)
+//	if strings.Contains(s, "multiple response.WriteHeader") {
+//		debug.PrintStack()
+//	}
+//	return os.Stderr.Write(p)
+//}
 
-	// Now use the logger with your http.Server:
-	logger := log.New(debugLogger{}, "", 0)
-
-	server := &http.Server{
-		Addr:     ":"+Controler.Configuration.Port,
-		Handler:  gziphandler.GzipHandler(r),
-		ErrorLog: logger,
-	}
-	log.Fatal(server.ListenAndServe())
-
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	fmt.Fprintf(w, "404 - Not Found!\n")
 }
 
-type debugLogger struct{}
+func HomePage(w http.ResponseWriter, r *http.Request) {
 
-func (d debugLogger) Write(p []byte) (n int, err error) {
-	s := string(p)
-	if strings.Contains(s, "multiple response.WriteHeader") {
-		debug.PrintStack()
+	now := time.Now() // find the time right now
+	HomePageVars := Models.HomePageVariables{//store the date and time in a struct
+		Date: now.Format("02-01-2006"),
+		Time: now.Format("15:04:05"),
+		LoginStatus: "you aren't logged in",
 	}
-	return os.Stderr.Write(p)
+	if ok, username, _ := Controler.Authenticated(r); ok {
+		HomePageVars.LoginStatus = "dear " + username + ", you are logged in"
+	}
+
+	Controler.OpenTemplate(w, r, HomePageVars, "homepage.html", Models.HeaderVariables{Title: "Authentication GO"})
 }

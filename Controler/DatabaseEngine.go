@@ -3,21 +3,21 @@ package Controler
 import (
 	"github.com/go-xorm/xorm"
 	"fmt"
+	//"GoRestful/*"
+	//"log"
+	//"log/syslog"
 	"GoRestful/Models/Struct"
 )
 
 var engine *xorm.Engine
 var flag bool
 
-var userDB = Configuration.UserDB
-var passDB = Configuration.PassDB
-var nameDB = Configuration.DB
-
-func GetEngine() *xorm.Engine {
+func GetEngine() *xorm.Engine{
 	if !flag {
 		flag = true
 		var errDB error
-		engine, errDB = xorm.NewEngine("mysql", userDB+":"+passDB+"@/"+nameDB+"?charset=utf8")
+		engine, errDB = xorm.NewEngine("mysql", Configuration.UserDB+":"+Configuration.PassDB+"@/"+
+			Configuration.DB+"?charset=utf8")
 		if errDB != nil {
 			fmt.Println(errDB)
 		}
@@ -35,6 +35,7 @@ func GetEngine() *xorm.Engine {
 		//engine.CreateTables(&Struct.AdminPicture{})
 		engine.CreateTables(&Struct.File{})
 		engine.CreateTables(&Struct.News{})
+
 
 		//engine.Sync2(new(Models.User))
 		//logWriter, err := syslog.New(syslog.LOG_DEBUG, "rest-xorm-example")
