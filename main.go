@@ -10,6 +10,9 @@ import (
 	"GoRestful/Controler/api"
 	"github.com/gorilla/mux"
 	"GoRestful/Controler/Admin"
+	"fmt"
+	"github.com/nytimes/gziphandler"
+	"github.com/tkanos/gonfig"
 )
 
 const (
@@ -17,6 +20,11 @@ const (
 )
 
 func main() {
+	err := gonfig.GetConf("./conf.json", &Controler.Configuration)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	fs := http.FileServer(http.Dir("Resource"))
 	http.Handle("/Resource/", http.StripPrefix("/Resource/", fs))
 
@@ -68,8 +76,14 @@ func main() {
 
 	r.HandleFunc("/file/", Controler.HandleClient)
 
-	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":80", nil))
+	r.NotFoundHandler = http.HandlerFunc(notFoundHandler)
+	http.Handle("/", gziphandler.GzipHandler(r))
+	log.Fatal(http.ListenAndServe(":"+Controler.Configuration.Port, nil))
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	fmt.Fprintf(w, "404 - Not Found!\n")
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {

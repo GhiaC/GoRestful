@@ -3,20 +3,17 @@ package Controler
 import (
 	"github.com/go-xorm/xorm"
 	"fmt"
-	//"GoRestful/Models"
-	//"log"
-	//"log/syslog"
 	"GoRestful/Models/Struct"
 )
 
 var engine *xorm.Engine
 var flag bool
 
-const userDB = "root"
-const passDB  = "mghiasi"
-const nameDB  = "restful"
+var userDB = Configuration.UserDB
+var passDB = Configuration.PassDB
+var nameDB = Configuration.DB
 
-func GetEngine() *xorm.Engine{
+func GetEngine() *xorm.Engine {
 	if !flag {
 		flag = true
 		var errDB error
@@ -38,7 +35,6 @@ func GetEngine() *xorm.Engine{
 		//engine.CreateTables(&Struct.AdminPicture{})
 		engine.CreateTables(&Struct.File{})
 		engine.CreateTables(&Struct.News{})
-
 
 		//engine.Sync2(new(Models.User))
 		//logWriter, err := syslog.New(syslog.LOG_DEBUG, "rest-xorm-example")

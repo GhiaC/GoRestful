@@ -13,4 +13,3 @@ type AnswerQuery struct  {
 
 	Username string `xorm:"varchar(256) not null"`
 }
-

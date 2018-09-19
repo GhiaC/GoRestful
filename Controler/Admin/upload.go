@@ -83,7 +83,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 		newFile := Struct.NewFile(id, handle.Filename, fileKey,description)
 		engine.Table(table).Insert(newFile) //has result
 		response.FileName = fileKey
-		jsonResponse(w, http.StatusCreated, &response)
+		jsonResponse(w, http.StatusOK, &response)
 	}
 }
 
