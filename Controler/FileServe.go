@@ -13,7 +13,7 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 	//First of check if Get is set in the URL
 	Filename := request.URL.Query().Get("file")
 
-	if Filename == ""{
+	if Filename == "" {
 		return
 	}
 	var get [] Struct.Picture
@@ -29,8 +29,9 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 			AllCols().Where("picture.key = ?", Filename).
 			Find(&get)
 	}
-
-	Filename = get[0].FileName
+	if len(get) == 1 {
+		Filename = get[0].FileName
+	}
 
 	if Filename == "" {
 		//Get not set, send a 400 bad request
@@ -73,3 +74,4 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 	io.Copy(writer, Openfile) //'Copy' the file to the client
 	return
 }
+
