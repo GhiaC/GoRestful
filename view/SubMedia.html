@@ -10,19 +10,7 @@
                         <div class="form-group">
                             <label for="text">Text :</label>
                             <div id="toolbar-container"></div>
-                            <textarea class="form-control" id="editor" name="text"></textarea>
-                            <script>
-                                DecoupledEditor
-                                        .create(document.querySelector('#editor'))
-                                        .then(editor => {
-                                            const toolbarContainer = document.querySelector('#toolbar-container');
-
-                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-                                        })
-                                        .catch(error => {
-                                            console.error(error);
-                                        });
-                            </script>
+                            <textarea class="form-control" id="text" name="text"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="picture">Picture :</label>

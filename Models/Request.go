@@ -10,3 +10,7 @@ type SendMessageRequest struct {
 	Token       string
 	Text        string
 }
+
+type GetMessageRequest struct {
+	Token       string
+}
