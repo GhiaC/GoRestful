@@ -22,35 +22,37 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 	text := decodedRequest.Text
 	FileAddress := decodedRequest.FileAddress
 	Response := Models.SendMessageResponse{
-		Error:     "token isn't valid.",
+		Error:     "Access Denied.",
 		Result:    false,
 		MessageId: 0,
 	}
-	ok, id := Authenticated(token)
-	if ok {
-		if text == "" {
-			Response.Error = "Message is empty"
-		} else {
-			engine := Controler.GetEngine()
-			newMessage := Struct.NewMessage(id, 0, text, FileAddress)
-			affected, err := engine.Table(Struct.Message{}).Insert(newMessage)
-			if affected > 0 && err == nil {
-				Response.Result = true
-				Response.Error = ""
-				Response.MessageId = newMessage.Id
+	if len(token) > 15 {
+		ok, id := Authenticated(token)
+		if ok {
+			if text == "" {
+				Response.Error = "Message is empty"
 			} else {
-				Response.Error = "Database Problem!"
+				engine := Controler.GetEngine()
+				newMessage := Struct.NewMessage(id, 0, text, FileAddress)
+				affected, err := engine.Table(Struct.Message{}).Insert(newMessage)
+				if affected > 0 && err == nil {
+					Response.Result = true
+					Response.Error = ""
+					Response.MessageId = newMessage.Id
+				} else {
+					Response.Error = "Database Problem!"
+				}
 			}
 		}
-
-		var jsonData []byte
-		jsonData, err := json.Marshal(Response)
-		if err != nil {
-			log.Println(err)
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(string(jsonData)))
 	}
+	var jsonData []byte
+	jsonData, err = json.Marshal(Response)
+	if err != nil {
+		log.Println(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(string(jsonData)))
+
 }
 func GetMessage(w http.ResponseWriter, r *http.Request) {
 	Response := Models.GetMessageResponse{
