@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"strings"
 	"GoRestful/Models"
+	"html"
 )
 
-func writeHtml(){
+func writeHtml() {
 
 }
-func OpenTemplate(w http.ResponseWriter, r *http.Request, vars interface{}, filename string,headerVar Models.HeaderVariables) {
+func OpenTemplate(w http.ResponseWriter, r *http.Request, vars interface{}, filename string, headerVar Models.HeaderVariables) {
 
 	var allFiles []string
 	files, err := ioutil.ReadDir("./view")
@@ -25,14 +26,14 @@ func OpenTemplate(w http.ResponseWriter, r *http.Request, vars interface{}, file
 			allFiles = append(allFiles, "./view/"+filename)
 		}
 	}
-
-	templates, err := template.ParseFiles(allFiles...)
+	var funcs = template.FuncMap{"upper": strings.ToUpper, "unescape": html.UnescapeString}
+	templates, err := template.New("t").Funcs(funcs).ParseFiles(allFiles...)
 
 	s1 := templates.Lookup("header.html")
 	s1.Execute(w, headerVar)
 
 	s2 := templates.Lookup("navigation.html")
-	loggedIn, _ ,_:= Authenticated(r)
+	loggedIn, _, _ := Authenticated(r)
 	s2.Execute(w, Models.NavigationVariables{LoggedIn: loggedIn})
 
 	s3 := templates.Lookup("jumbotron.html")

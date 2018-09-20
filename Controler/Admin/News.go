@@ -5,18 +5,22 @@ import (
 	"GoRestful/Controler"
 	"GoRestful/Models"
 	"GoRestful/Models/Struct"
+	"html"
 )
+
+
 
 func News(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
-	if ok, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		fileName := r.PostForm.Get("filename")
+		Title := r.PostForm.Get("Title")
 		submit := r.PostForm.Get("submit")
 
 		result := Models.NewsLayerVariables{
-			Answer: "",
+			Answer:      "",
 			SubmitValue: "Add News",
 		}
 
@@ -25,7 +29,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 		} else if text != "" {
 			engine := Controler.GetEngine()
 			//id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewNews(text, fileName)
+			newUser := Struct.NewNews(html.UnescapeString(text), fileName, Title)
 			affected, err := engine.Table(Struct.News{}).Insert(newUser)
 			println(affected)
 			if affected > 0 && err == nil {
@@ -39,14 +43,14 @@ func News(w http.ResponseWriter, r *http.Request) {
 		result.News = news
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
 
-	} else if ok, _ ,_:= Controler.Authenticated(r); ok {
+	} else if ok, _, _ := Controler.Authenticated(r); ok {
 
 		var news []Struct.News
 		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
 
 		result := Models.NewsLayerVariables{
-			News:   news,
-			Answer: "",
+			News:        news,
+			Answer:      "",
 			SubmitValue: "Add News",}
 
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})

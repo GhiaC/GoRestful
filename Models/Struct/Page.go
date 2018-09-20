@@ -78,15 +78,17 @@ func NewAboutUs(Text string) *AboutUs {
 
 type News struct {
 	Id       int64     `xorm:"pk autoincr"`
+	Title    string    `xorm:"text unique not null"`
 	Text     string    `xorm:"text unique not null"`
 	FileName string    `xorm:"varchar(256) unique not null"`
 	Created  time.Time `xorm:"created"`
 }
 
-func NewNews(Text, FileName string) *News {
+func NewNews(Text, FileName, Title string) *News {
 	news := new(News)
 	news.Text = Text
 	news.FileName = FileName
+	news.Title = Title
 	news.Created = time.Now()
 	return news
 }
