@@ -29,11 +29,7 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 			AllCols().Where("picture.key = ?", Filename).
 			Find(&get)
 	}
-<<<<<<< HEAD
-	if len(get) == 1{
-=======
 	if len(get) == 1 {
->>>>>>> 1ac92ec551d5e81591e06803653dfb71a0cec0f9
 		Filename = get[0].FileName
 	}
 
@@ -78,4 +74,3 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 	io.Copy(writer, Openfile) //'Copy' the file to the client
 	return
 }
-

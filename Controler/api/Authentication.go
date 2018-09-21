@@ -40,6 +40,7 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 					Controler.TokenGenerator() + Controler.TokenGenerator() +
 					Controler.TokenGenerator() + Controler.TokenGenerator()
 			engine.Table(Struct.User{}).Omit("id", "username", "password", "created").
+				Where(builder.Eq{"Username": username, "Password": password, "Type": 2}).
 				Update(Struct.User{Token: Token})
 			Response.Result = true
 			Response.Error = ""
@@ -61,8 +62,8 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 func Authenticated(token string) (bool, int) {
 	var id int
 	engine := Controler.GetEngine()
-	has, err := engine.Table(Struct.User{}).Where(Struct.User{Token: token}).Cols("id").Get(&id)
-	if has && err == nil && id > 0 && token != ""{
+	has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Token": token}).Cols("id").Get(&id)
+	if has && err == nil && id > 0 && token != "" {
 		return true, id
 	}
 	return false, 0
