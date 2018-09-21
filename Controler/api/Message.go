@@ -10,22 +10,27 @@ import (
 	"github.com/go-xorm/builder"
 )
 
-func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
-
-	decoder := json.NewDecoder(r.Body)
-	var decodedRequest Models.SendMessageRequest
-	err := decoder.Decode(&decodedRequest)
-	if err != nil {
-		panic(err)
-	}
-	token := decodedRequest.Token
-	text := decodedRequest.Text
-	FileAddress := decodedRequest.FileAddress
+func SendMessage(w http.ResponseWriter, r *http.Request) {
 	Response := Models.SendMessageResponse{
 		Error:     "Access Denied.",
 		Result:    false,
 		MessageId: 0,
 	}
+	if r.Header["Content-Type"][0] != "application/json" {
+		Response.Error = "Content-type is not valid"
+		Controler.JsonResponse(w, Response)
+		return
+	}
+	decoder := json.NewDecoder(r.Body)
+	var decodedRequest Models.SendMessageRequest
+	err := decoder.Decode(&decodedRequest)
+	if err != nil {
+		log.Fatal(err)
+	}
+	token := decodedRequest.Token
+	text := decodedRequest.Text
+	FileAddress := decodedRequest.FileAddress
+
 	if len(token) > 15 {
 		ok, id := Authenticated(token)
 		if ok {
@@ -45,26 +50,24 @@ func SendMessage(w http.ResponseWriter, r *http.Request) { //TODO
 			}
 		}
 	}
-	var jsonData []byte
-	jsonData, err = json.Marshal(Response)
-	if err != nil {
-		log.Println(err)
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(string(jsonData)))
-
+	Controler.JsonResponse(w, Response)
 }
 func GetMessage(w http.ResponseWriter, r *http.Request) {
 	Response := Models.GetMessageResponse{
 		Error:  "",
 		Result: false,
 	}
+	if r.Header["Content-Type"][0] != "application/json" {
+		Response.Error = "Content-type is not valid"
+		Controler.JsonResponse(w, Response)
+		return
+	}
 	decoder := json.NewDecoder(r.Body)
 	var decodedRequest Models.GetMessageRequest
 	err := decoder.Decode(&decodedRequest)
 	token := decodedRequest.Token
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if len(token) > 15 {
 		logged, userid := Authenticated(token)
@@ -81,13 +84,5 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 	} else {
 		Response.Error = "Access Denied"
 	}
-
-	var jsonData []byte
-	jsonData, err = json.Marshal(Response)
-	if err != nil {
-		log.Println(err)
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(string(jsonData)))
+	Controler.JsonResponse(w, Response)
 }
