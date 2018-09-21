@@ -30,7 +30,7 @@ func main() {
 	r.HandleFunc("/login", Controler.Login)       //DONE
 	r.HandleFunc("/register", Controler.Register) //DONE
 
-	s1 := r.PathPrefix("/api").Subrouter()
+	s1 := r.Methods("PUT").PathPrefix("/api").Subrouter()
 	{
 		s1.HandleFunc("/titles", api.Titles)                  //DONE
 		s1.HandleFunc("/subtitles", api.AllSubTitles)         //DONE
@@ -46,9 +46,9 @@ func main() {
 		//if true
 		{
 			//s12.HandleFunc("/getMessage/{id:[0-9]+}", api.GetMessage) //TODO
-			s12.HandleFunc("/getMessage", api.GetMessage)     //DONE
-			s12.HandleFunc("/sendMessage", api.SendMessage)   //DONE
-			s12.HandleFunc("/upload/picture", api.UploadFile) //DONE //name = file
+			s12.HandleFunc("/getMessage", api.GetMessage) //DONE
+			s12.HandleFunc("/sendMessage", api.SendMessage)              //DONE
+			s12.HandleFunc("/upload/picture", api.UploadFile)            //DONE //name = file
 		}
 	}
 
@@ -76,6 +76,7 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":"+Controler.Configuration.Port, nil))
 }
+
 //type debugLogger struct{}
 //
 //func (d debugLogger) Write(p []byte) (n int, err error) {
