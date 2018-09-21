@@ -29,8 +29,9 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 			AllCols().Where("picture.key = ?", Filename).
 			Find(&get)
 	}
-
-	Filename = get[0].FileName
+	if len(get) == 1{
+		Filename = get[0].FileName
+	}
 
 	if Filename == "" {
 		//Get not set, send a 400 bad request

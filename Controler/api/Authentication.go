@@ -62,7 +62,7 @@ func Authenticated(token string) (bool, int) {
 	var id int
 	engine := Controler.GetEngine()
 	has, err := engine.Table(Struct.User{}).Where(Struct.User{Token: token}).Cols("id").Get(&id)
-	if has && err == nil && id > 0 {
+	if has && err == nil && id > 0 && token != ""{
 		return true, id
 	}
 	return false, 0
