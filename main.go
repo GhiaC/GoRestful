@@ -30,7 +30,7 @@ func main() {
 	r.HandleFunc("/login", Controler.Login)       //DONE
 	r.HandleFunc("/register", Controler.Register) //DONE
 
-	s1 := r.Methods("PUT").PathPrefix("/api").Subrouter()
+	s1 := r.PathPrefix("/api").Subrouter()
 	{
 		s1.HandleFunc("/titles", api.Titles)                  //DONE
 		s1.HandleFunc("/subtitles", api.AllSubTitles)         //DONE
