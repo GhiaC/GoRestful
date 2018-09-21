@@ -10,23 +10,31 @@ import (
 	"log"
 	"GoRestful/Controler"
 	"GoRestful/Models/Struct"
+	"strconv"
 )
 
 var fileKey = Controler.TokenGenerator()
 
 //UploadFile uploads a file to the server
 func UploadFile(w http.ResponseWriter, r *http.Request) {
+	mem, _ := strconv.Atoi(r.Header["Content-Length"][0])
+	r.ParseMultipartForm(int64(mem))
+	Token := r.FormValue("Token")
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	Token := r.PostForm.Get("Token")
+	response := Models.UploadFileResponse{
+		Error:    "",
+		Result:   false,
+		FileName: "",
+	}
 	logged, id := Authenticated(Token)
-	if  !logged && !(id > 0) {
-		//TODO show error
+	if !logged && !(id > 0) {
+		response.Error = "Access denied"
+		jsonResponse(w, http.StatusCreated, &response)
 		return
 	}
-
 	file, handle, err := r.FormFile("file")
 	description := "User uploaded"
 
@@ -49,11 +57,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	//	})
 	//}
 
-	response := Models.UploadFileResponse{
-		Error:    "",
-		Result:   false,
-		FileName: "",
-	}
 	fileKey = Controler.TokenGenerator()
 
 	saveFile(w, file, handle, &response)
