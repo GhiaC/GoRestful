@@ -63,7 +63,7 @@ func main() {
 		s2.HandleFunc("/admins", Admin.StatusOfAdmins)               //DONE
 		s2.HandleFunc("/news", Admin.News)                           //DONE
 		s2.HandleFunc("/upload", Admin.UploadPage)                   //DONE
-		s2.HandleFunc("/upload/picture", Admin.UploadFile)           //DONE
+		s2.HandleFunc("/upload/picture", Admin.UploadPicture)        //DONE
 		s2.HandleFunc("/upload/file", Admin.UploadFile)              //DONE
 		s2.HandleFunc("/messages", Admin.Messages)                   //DONE //TODO
 		s2.HandleFunc("/message/answer/{id:[0-9]+}", Admin.Answer)   //TODO

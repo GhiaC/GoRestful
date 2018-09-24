@@ -18,7 +18,7 @@ func UploadPage(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _ := Controler.Authenticated(r); ok {
 
 		var files []Struct.File
-		Controler.GetEngine().Table(Struct.File{}).AllCols().Where(builder.Eq{"file.AdminFile": true}).Find(&files)
+		Controler.GetEngine().Table(Struct.File{}).AllCols().Where(builder.Eq{"admin_file": true}).Find(&files)
 
 		result := Models.AdminFileLayerVariables{
 			Files: files,
