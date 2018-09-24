@@ -16,19 +16,19 @@ func HandleClient(writer http.ResponseWriter, request *http.Request) {
 	if Filename == "" {
 		return
 	}
-	var get [] Struct.Picture
+	var get [] Struct.File
 
 	GetEngine().
 		Table(Struct.File{}).
 		AllCols().Where("file.key = ?", Filename).
 		Find(&get)
 
-	if len(get) == 0 {
-		GetEngine().
-			Table(Struct.Picture{}).
-			AllCols().Where("picture.key = ?", Filename).
-			Find(&get)
-	}
+	//if len(get) == 0 {
+	//	GetEngine().
+	//		Table(Struct.Picture{}).
+	//		AllCols().Where("picture.key = ?", Filename).
+	//		Find(&get)
+	//}
 	if len(get) == 1 {
 		Filename = get[0].FileName
 	}

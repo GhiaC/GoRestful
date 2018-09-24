@@ -15,8 +15,9 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
-		//Phonenumber := r.PostForm.Get("Phonenumber")
-		//name := r.PostForm.Get("name")
+		PhoneNumber := r.PostForm.Get("PhoneNumber")
+		name := r.PostForm.Get("name")
+		IMEI := r.PostForm.Get("IMEI")
 		password := r.PostForm.Get("password")
 		submit := r.PostForm.Get("submit")
 
@@ -31,13 +32,13 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewUser(username, password, 2) // type 2 = user
+			newUser := Struct.NewUser(username, password, name, PhoneNumber, IMEI, 2) // type 2 = user
 			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
 			}
 		}
-		Controler.OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Add User"})
+		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "Add User"})
 	}
 }
 

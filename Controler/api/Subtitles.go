@@ -9,6 +9,7 @@ import (
 	"GoRestful/Models/Struct"
 	"strconv"
 	"github.com/go-xorm/builder"
+	"GoRestful/Models"
 )
 
 func SubTitles(w http.ResponseWriter, r *http.Request) {
@@ -16,8 +17,10 @@ func SubTitles(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
-	var users []Struct.Subtitle
-	Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"Pid": int64(id)}).Find(&users)
+	var users []Models.SubtitleJoinFile
+	Controler.GetEngine().Table(Struct.Subtitle{}).Select("subtitle.*,file.type").
+		Join("LEFT", Struct.File{}, "subtitle.picture = file.key").
+		Where(builder.Eq{"Pid": int64(id)}).Find(&users)
 	var jsonData []byte
 	jsonData, err := json.Marshal(users)
 	if err != nil {

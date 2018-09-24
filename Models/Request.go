@@ -3,6 +3,7 @@ package Models
 type LoginRequest struct {
 	Username string
 	Password string
+	IMEI string
 }
 
 type SendMessageRequest struct {

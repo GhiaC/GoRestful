@@ -15,9 +15,10 @@ func Messages(w http.ResponseWriter, r *http.Request) {
 		var messages []Models.AnswerQuery
 		//.Distinct("user_id")
 		Controler.GetEngine().Table(Struct.Message{}).
-			Select("user.username,message.*").
+			Select("user.username,message.*,file.Type").
 			Join("INNER", Struct.User{}, "message.user_id = user.id ").
-			Where(builder.Eq{"answer_to": 0}).AllCols().Find(&messages)
+			Join("LEFT", Struct.File{}, "message.file_address = file.key").
+			Where(builder.Eq{"answer_to": 0}).OrderBy("message.created").AllCols().Find(&messages)
 		result := Models.MessagesLayerVariables{
 			Messages: messages,
 		}
@@ -86,12 +87,11 @@ func Answer(w http.ResponseWriter, r *http.Request) {
 			Join("INNER", Struct.User{}, "message.user_id = user.id ").
 			Where(builder.Eq{"message.answer_to": id}).Find(&answers)
 
-
 		result := Models.AnswerLayerVariables{
 			TitleId:     vars["id"],
 			Msg:         msg,
 			Answer:      "",
-			Answers : answers,
+			Answers:     answers,
 			SubmitValue: "Send Answer",}
 
 		Controler.OpenTemplate(w, r, result, "Answer.html", Models.HeaderVariables{Title: "Answer"})

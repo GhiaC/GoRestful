@@ -18,7 +18,10 @@ func StatusOfUsers(w http.ResponseWriter, r *http.Request) {
 func status(w http.ResponseWriter, r *http.Request, Type int, filename, title string) {
 	if ok, _, _ := Controler.Authenticated(r); ok {
 		var users []Struct.User
-		Controler.GetEngine().Table(Struct.User{}).Where(builder.Eq{"Type": Type}).Cols("id", "username").Find(&users)
+		Controler.GetEngine().Table(Struct.User{}).
+			Where(builder.Eq{"Type": Type}).
+			Cols("id", "username","phone_number","name").
+			Find(&users)
 		//if err == nil {
 		result := Models.StatusPageVariables{Users: users}
 		Controler.OpenTemplate(w, r, result, filename, Models.HeaderVariables{Title: title})

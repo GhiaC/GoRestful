@@ -28,7 +28,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := GetEngine()
-			newUser := Struct.NewUser(username, password, 1) //Type = 1 is for admin
+			newUser := Struct.NewUser(username, password,"","","",1) //Type = 1 is for admin
 			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"

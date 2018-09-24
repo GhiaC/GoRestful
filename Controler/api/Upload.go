@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"log"
 	"GoRestful/Controler"
-	"GoRestful/Models/Struct"
 	"strconv"
+	"GoRestful/Models/Struct"
 )
 
 var fileKey = Controler.TokenGenerator()
@@ -32,7 +32,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	logged, id := Authenticated(Token)
 	if !logged && !(id > 0) {
 		response.Error = "Access denied"
-		jsonResponse(w, http.StatusCreated, &response)
+		jsonResponse(w, http.StatusOK, &response)
 		return
 	}
 	file, handle, err := r.FormFile("file")
@@ -44,44 +44,57 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	//mimeType := handle.Header.Get("Content-Type")
+	mimeType := handle.Header.Get("Content-Type")
 	//switch mimeType {
 	//case "image/jpeg":
+	//	if saveFile(w, file, handle, &response) {
+	//		FileName := insertFileInfo(id, handle.Filename, description, mimeType)
+	//		response.Result = true
+	//		response.FileName = FileName
+	//	}
 	//case "image/png":
-	//	saveFile(w, file, handle)
+	fileKey = Controler.TokenGenerator() //and filename
+
+	if saveFile(w, file, handle, &response, fileKey) {
+		insertFileInfo(id, fileKey, description, mimeType)
+		response.Result = true
+		response.FileName = fileKey
+	}
 	//default:
-	//	jsonResponse(w, http.StatusBadRequest, Models.UploadFileResponse{
-	//		Error:    "The format file is not valid.",
-	//		Result:   false,
-	//		FileName: "",
-	//	})
+	//	response.Error = "The format file is not valid."
+	//	jsonResponse(w, http.StatusBadRequest, &response)
+	//	return
 	//}
+	jsonResponse(w, http.StatusOK, &response)
 
-	fileKey = Controler.TokenGenerator()
-
-	saveFile(w, file, handle, &response)
-
-	engine := Controler.GetEngine()
-	newFile := Struct.NewFile(id, handle.Filename, fileKey, description)
-	engine.Table(Struct.Picture{}).Insert(newFile) //has result
-	response.FileName = fileKey
-	jsonResponse(w, http.StatusCreated, &response)
 }
 
-func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader, response *Models.UploadFileResponse) {
+func insertFileInfo(userid int, filename, description, Type string) {
+	engine := Controler.GetEngine()
+	newFile := Struct.NewFile(userid, filename, filename, description, Type,false)
+	engine.Table(Struct.File{}).Insert(newFile) //has result
+}
+
+func saveFile(
+	w http.ResponseWriter,
+	file multipart.File,
+	handle *multipart.FileHeader,
+	response *Models.UploadFileResponse,
+	fileKey string) bool {
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-		return
+		return false
 	}
 
-	err = ioutil.WriteFile("./files/"+handle.Filename, data, 0666)
+	err = ioutil.WriteFile("./files/"+fileKey, data, 0666)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-		return
+		return false
 	}
 	response.Error = "File uploaded successfully!."
 	response.Result = true
+	return true
 }
 
 func jsonResponse(w http.ResponseWriter, code int, message *Models.UploadFileResponse) {

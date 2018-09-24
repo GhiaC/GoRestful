@@ -74,12 +74,14 @@ func GetMessage(w http.ResponseWriter, r *http.Request) {
 		if logged {
 			var messages []Models.AnswerQuery
 			Controler.GetEngine().Table(Struct.Message{}).
-				Select("user.username,message.*").
+				Select("user.username,message.*,file.type").
 				Join("INNER", Struct.User{}, "message.user_id = user.id ").
-				Where(builder.Eq{"user_id": userid}).Or(builder.Eq{"answer_to": userid}).
+				Join("LEFT", Struct.File{}, "message.file_address = file.key").
+				Where(builder.Eq{"user_id": userid}).Or(builder.Eq{"answer_to": userid}).OrderBy("message.created").
 				Find(&messages)
 			Response.Result = true
 			Response.Messages = messages
+
 		}
 	} else {
 		Response.Error = "Access Denied"

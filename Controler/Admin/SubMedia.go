@@ -28,7 +28,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 		} else if text != "" {
 			engine := Controler.GetEngine()
 			id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewSubMedia(int64(id), text, picture)
+			newUser := Struct.NewSubMedia(int64(id), picture, text)
 			affected, err := engine.Table(Struct.SubMedia{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				result.Answer = "Successful."
@@ -52,7 +52,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 
 		result := Models.SubMediaLayerVariables{
 			TitleId:     vars["id"],
-			SubMedias:      medias,
+			SubMedias:   medias,
 			Answer:      "",
 			SubmitValue: "Add SubMedia",}
 

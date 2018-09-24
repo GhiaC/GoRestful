@@ -29,7 +29,7 @@ func GetEngine() *xorm.Engine{
 		engine.CreateTables(&Struct.Media{})
 		engine.CreateTables(&Struct.Subtitle{})
 		engine.CreateTables(&Struct.Title{})
-		engine.CreateTables(&Struct.Picture{})
+		//engine.CreateTables(&Struct.Picture{})
 		engine.CreateTables(&Struct.SubMedia{})
 		engine.CreateTables(&Struct.Message{})
 		//engine.CreateTables(&Struct.AdminPicture{})

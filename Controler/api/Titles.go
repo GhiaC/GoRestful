@@ -6,13 +6,15 @@ import (
 	"encoding/json"
 	"log"
 	"GoRestful/Models/Struct"
+	"GoRestful/Models"
 )
 
 func Titles(w http.ResponseWriter, r *http.Request) {
-	//if ok, _ := Controler.Authenticated(r); ok {
 	//TODO check token
-	var users [] Struct.Title
-	Controler.GetEngine().Table(Struct.Title{}).AllCols().Find(&users)
+	var users [] Models.TitleJoinFile
+	Controler.GetEngine().Table(Struct.Title{}).Select("title.*,file.type").
+		Join("LEFT", Struct.File{}, "title.picture = file.key").
+		Find(&users)
 	var jsonData []byte
 	jsonData, err := json.Marshal(users)
 	if err != nil {

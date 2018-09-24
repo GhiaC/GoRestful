@@ -10,13 +10,15 @@ import (
 	"fmt"
 	"encoding/json"
 	"log"
+	"strconv"
+	"github.com/go-xorm/builder"
 )
 
 func UploadPage(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _ := Controler.Authenticated(r); ok {
 
 		var files []Struct.File
-		Controler.GetEngine().Table(Struct.File{}).AllCols().Find(&files)
+		Controler.GetEngine().Table(Struct.File{}).AllCols().Where(builder.Eq{"file.AdminFile": true}).Find(&files)
 
 		result := Models.AdminFileLayerVariables{
 			Files: files,
@@ -30,24 +32,36 @@ func UploadPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadPicture(w http.ResponseWriter, r *http.Request) {
-	uploadFile(w, r, Struct.Picture{})
+	uploadFile(w, r, Struct.File{}, false)
 }
 
 func UploadFile(w http.ResponseWriter, r *http.Request) {
-	uploadFile(w, r, Struct.File{})
+	uploadFile(w, r, Struct.File{}, true)
 }
 
 var fileKey = ""
 
 //UploadFile uploads a file to the server
-func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
+func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}, AdminFile bool) {
+	mem, _ := strconv.Atoi(r.Header["Content-Length"][0])
+	r.ParseMultipartForm(int64(mem))
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-
+	response := Models.UploadFileResponse{
+		Error:    "",
+		Result:   false,
+		FileName: "",
+	}
+	logged, _, id := Controler.Authenticated(r)
+	if !logged && !(id > 0) {
+		response.Error = "Access denied"
+		jsonResponse(w, http.StatusOK, &response)
+		return
+	}
 	file, handle, err := r.FormFile("file")
-	description := r.PostForm.Get("description")
+	description := r.FormValue("description")
 
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
@@ -55,52 +69,56 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}) {
 	}
 	defer file.Close()
 
-	//mimeType := handle.Header.Get("Content-Type")
+	mimeType := handle.Header.Get("Content-Type")
 	//switch mimeType {
 	//case "image/jpeg":
-	//case "image/png":
-	//	saveFile(w, file, handle)
-	//default:
-	//	jsonResponse(w, http.StatusBadRequest, Models.UploadFileResponse{
-	//		Error:    "The format file is not valid.",
-	//		Result:   false,
-	//		FileName: "",
-	//	})
-	//}
-
-	response := Models.UploadFileResponse{
-		Error:    "",
-		Result:   false,
-		FileName: "",
-	}
-	fileKey = Controler.TokenGenerator()
-
-	saveFile(w, file, handle, &response)
-
-	if auth, _, id := Controler.Authenticated(r); auth && id > 0 {
-		engine := Controler.GetEngine()
-		//id, _ := strconv.Atoi(vars["id"])
-		newFile := Struct.NewFile(id, handle.Filename, fileKey,description)
-		engine.Table(table).Insert(newFile) //has result
+	fileKey = Controler.TokenGenerator() //and filename
+	if saveFile(w, file, handle, &response, fileKey) {
+		insertFileInfo(id, fileKey, description, mimeType, table, AdminFile)
+		response.Result = true
 		response.FileName = fileKey
-		jsonResponse(w, http.StatusOK, &response)
 	}
+	//case "image/png":
+	//	if saveFile(w, file, handle, &response) {
+	//		FileName := insertFileInfo(id, handle.Filename, description, mimeType, table)
+	//		response.Result = true
+	//		response.FileName = FileName
+	//	}
+	//default:
+	//	response.Error = "The format file is not valid."
+	//	jsonResponse(w, http.StatusBadRequest, &response)
+	//	return
+	//}
+	jsonResponse(w, http.StatusOK, &response)
+
 }
 
-func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader, response *Models.UploadFileResponse) {
+func insertFileInfo(userId int, filename, description, Type string, table interface{}, AdminFile bool) {
+	engine := Controler.GetEngine()
+	newFile := Struct.NewFile(userId, filename, filename, description, Type, AdminFile)
+	engine.Table(table).Insert(newFile) //has result
+}
+
+func saveFile(
+	w http.ResponseWriter,
+	file multipart.File,
+	handle *multipart.FileHeader,
+	response *Models.UploadFileResponse,
+	filename string) bool {
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-		return
+		return false
 	}
 
-	err = ioutil.WriteFile("./files/"+handle.Filename, data, 0666)
+	err = ioutil.WriteFile("./files/"+filename, data, 0666)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
-		return
+		return false
 	}
 	response.Error = "File uploaded successfully!."
 	response.Result = true
+	return true
 }
 
 func jsonResponse(w http.ResponseWriter, code int, message *Models.UploadFileResponse) {

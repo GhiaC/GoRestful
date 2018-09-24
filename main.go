@@ -46,9 +46,9 @@ func main() {
 		//if true
 		{
 			//s12.HandleFunc("/getMessage/{id:[0-9]+}", api.GetMessage) //TODO
-			s12.HandleFunc("/getMessage", api.GetMessage) //DONE
-			s12.HandleFunc("/sendMessage", api.SendMessage)              //DONE
-			s12.HandleFunc("/upload/picture", api.UploadFile)            //DONE //name = file
+			s12.HandleFunc("/getMessage", api.GetMessage)     //DONE
+			s12.HandleFunc("/sendMessage", api.SendMessage)   //DONE
+			s12.HandleFunc("/upload/picture", api.UploadFile) //DONE //name = file
 		}
 	}
 
@@ -63,7 +63,7 @@ func main() {
 		s2.HandleFunc("/admins", Admin.StatusOfAdmins)               //DONE
 		s2.HandleFunc("/news", Admin.News)                           //DONE
 		s2.HandleFunc("/upload", Admin.UploadPage)                   //DONE
-		s2.HandleFunc("/upload/picture", Admin.UploadPicture)        //DONE
+		s2.HandleFunc("/upload/picture", Admin.UploadFile)           //DONE
 		s2.HandleFunc("/upload/file", Admin.UploadFile)              //DONE
 		s2.HandleFunc("/messages", Admin.Messages)                   //DONE //TODO
 		s2.HandleFunc("/message/answer/{id:[0-9]+}", Admin.Answer)   //TODO

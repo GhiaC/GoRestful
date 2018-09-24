@@ -1,17 +1,23 @@
 package Struct
 
 type User struct {
-	Id       int    `xorm:"pk autoincr"`
-	Username string `xorm:"varchar(256) unique not null"`
-	Password string `xorm:"varchar(256) not null"`
-	Type     int // 0 root admin // 1 admin // 2 user
-	Token    string `xorm:"varchar(256) default null"`
+	Id          int    `xorm:"pk autoincr"`
+	Username    string `xorm:"varchar(256) unique not null"`
+	Password    string `xorm:"varchar(256) not null"`
+	Name        string `xorm:"varchar(256) not null"`
+	PhoneNumber string `xorm:"varchar(20) not null"`
+	Type        int // 0 root admin // 1 admin // 2 user
+	IMEI        string `xorm:"varchar(40) not null"`
+	Token       string `xorm:"varchar(256) default null"`
 }
 
-func NewUser(username, password string, Type int) *User {
+func NewUser(username, password, name, phonenumber, IMEI string, Type int) *User {
 	newUser := new(User)
 	newUser.Username = username
 	newUser.Password = password
+	newUser.Name = name
+	newUser.PhoneNumber = phonenumber
+	newUser.IMEI = IMEI
 	newUser.Type = Type
 	return newUser
 }

@@ -1,9 +1,11 @@
 package Models
 
 type LoginResponse struct {
-	Result bool
-	Token  string
-	Error  string
+	Result      bool
+	Token       string
+	Name        string
+	PhoneNumber string
+	Error       string
 }
 type SendMessageResponse struct {
 	Result    bool

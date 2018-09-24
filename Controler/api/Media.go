@@ -7,6 +7,7 @@ import (
 	"log"
 	"github.com/gorilla/mux"
 	"GoRestful/Models/Struct"
+	"GoRestful/Models"
 )
 
 func Media(w http.ResponseWriter, r *http.Request) {
@@ -28,10 +29,11 @@ func Media(w http.ResponseWriter, r *http.Request) {
 
 func AllMedia(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
-	var users []Struct.Media
-	Controler.GetEngine().Table(Struct.Media{}).AllCols().
-	//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.subtitleid ").
+	var users []Models.MediaJoinFile
+	Controler.GetEngine().Table(Struct.Media{}).Select("media.*,file.type").
+		Join("LEFT", Struct.File{}, "media.picture = file.key").
 		Find(&users)
+
 	var jsonData []byte
 
 	jsonData, err := json.Marshal(users)
