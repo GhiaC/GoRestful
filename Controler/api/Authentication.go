@@ -33,15 +33,15 @@ func Login(rw http.ResponseWriter, req *http.Request) {
 		var User Struct.User
 		engine := Controler.GetEngine()
 		has, err := engine.Table(Struct.User{}).
-			Where(builder.Eq{"Username": username, "Password": password, "IMEI": IMEI, "Type": 2}).
+			Where(builder.Eq{"Username": username, "Password": password, "imei": IMEI, "Type": 2}).
 			Select("name,phone_number,id").Get(&User)
 		if has && err == nil && User.Id > 0 {
 			Token :=
 				Controler.TokenGenerator() + Controler.TokenGenerator() +
 					Controler.TokenGenerator() + Controler.TokenGenerator() +
 					Controler.TokenGenerator() + Controler.TokenGenerator()
-			engine.Table(Struct.User{}).Omit("id", "username", "password", "name", "phone_number", "IMEI", "created").
-				Where(builder.Eq{"Username": username, "Password": password, "IMEI": IMEI, "Type": 2}).
+			engine.Table(Struct.User{}).Omit("id", "username", "password", "name", "phone_number", "imei", "created").
+				Where(builder.Eq{"Username": username, "Password": password, "imei": IMEI, "Type": 2}).
 				Update(Struct.User{Token: Token})
 			Response.Result = true
 			Response.Error = ""

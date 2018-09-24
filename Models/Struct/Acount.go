@@ -7,7 +7,7 @@ type User struct {
 	Name        string `xorm:"varchar(256) not null"`
 	PhoneNumber string `xorm:"varchar(20) not null"`
 	Type        int // 0 root admin // 1 admin // 2 user
-	IMEI        string `xorm:"varchar(40) not null"`
+	imei        string `xorm:"varchar(40) not null"`
 	Token       string `xorm:"varchar(256) default null"`
 }
 
@@ -17,7 +17,7 @@ func NewUser(username, password, name, phonenumber, IMEI string, Type int) *User
 	newUser.Password = password
 	newUser.Name = name
 	newUser.PhoneNumber = phonenumber
-	newUser.IMEI = IMEI
+	newUser.imei = IMEI
 	newUser.Type = Type
 	return newUser
 }
