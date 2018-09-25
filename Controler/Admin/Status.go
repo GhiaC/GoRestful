@@ -20,7 +20,7 @@ func status(w http.ResponseWriter, r *http.Request, Type int, filename, title st
 		var users []Struct.User
 		Controler.GetEngine().Table(Struct.User{}).
 			Where(builder.Eq{"Type": Type}).
-			Cols("id", "username","phone_number","name").
+			Cols("id", "username","phone_number","name","imei").
 			Find(&users)
 		//if err == nil {
 		result := Models.StatusPageVariables{Users: users}

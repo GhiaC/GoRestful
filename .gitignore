@@ -3,3 +3,5 @@
 .idea/*
 files/*
 conf.json
+./nohup.out
+nohup.out

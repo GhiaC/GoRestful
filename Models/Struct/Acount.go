@@ -4,10 +4,10 @@ type User struct {
 	Id          int    `xorm:"pk autoincr"`
 	Username    string `xorm:"varchar(256) unique not null"`
 	Password    string `xorm:"varchar(256) not null"`
-	Name        string `xorm:"varchar(256) not null"`
-	PhoneNumber string `xorm:"varchar(20) not null"`
+	Name        string `xorm:"varchar(256)"`
+	PhoneNumber string `xorm:"varchar(20)"`
 	Type        int // 0 root admin // 1 admin // 2 user
-	imei        string `xorm:"varchar(40) not null"`
+	Imei        string `xorm:"varchar(40)"`
 	Token       string `xorm:"varchar(256) default null"`
 }
 
@@ -17,7 +17,7 @@ func NewUser(username, password, name, phonenumber, IMEI string, Type int) *User
 	newUser.Password = password
 	newUser.Name = name
 	newUser.PhoneNumber = phonenumber
-	newUser.imei = IMEI
+	newUser.Imei = IMEI
 	newUser.Type = Type
 	return newUser
 }
