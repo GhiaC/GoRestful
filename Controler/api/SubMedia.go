@@ -29,8 +29,9 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 
 func AllSubMedia(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
-	var SubMedias []Struct.SubMedia
-	Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().
+	var SubMedias []Models.SubMediaJoinFile
+	Controler.GetEngine().Table(Struct.SubMedia{}).Select("sub_media.*,file.type").
+		Join("LEFT", Struct.File{}, "sub_media.url = file.key").
 		Find(&SubMedias)
 	var jsonData []byte
 
