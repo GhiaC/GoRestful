@@ -17,8 +17,10 @@ import (
 func UploadPage(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _ := Controler.Authenticated(r); ok {
 
-		var files []Struct.File
-		Controler.GetEngine().Table(Struct.File{}).AllCols().Where(builder.Eq{"admin_file": true}).Find(&files)
+		var files []Models.FileInner
+		Controler.GetEngine().Table(Struct.File{}).Select("file.*,user.username").
+			Join("INNER", Struct.User{}, "file.user_id = user.id ").
+			Where(builder.Eq{"admin_file": true}).Find(&files)
 
 		result := Models.AdminFileLayerVariables{
 			Files: files,

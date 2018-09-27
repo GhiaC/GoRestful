@@ -75,24 +75,24 @@
 
 
 <div class="well">
-    <h2>Admin Files</h2>
+    <h2>فایل های اپلود شده</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
             <th>Admin Name</th>
-            <th>File Address</th>
-            <th>Description</th>
+            <th>ادرس فایل</th>
+            <th>توضیحات</th>
             <th>Key</th>
-            <th>Type</th>
-            <th>Created Date</th>
+            <th>نوع فایل</th>
+            <th>تاریخ ارسال</th>
         </tr>
         </thead>
         <tbody>
         {{range .Files}}
         <tr>
             <td>{{.Id}}</td>
-            <td>{{.UserId}}</td>
+            <td>{{.Username}}</td>
             <td><img style="width: 100px" alt="No Pic" src="https://s8.ghiasi.me/file/?file={{.Key}}"></td>
             <td>{{.Description}}</td>
             <td>{{.Key}}</td>

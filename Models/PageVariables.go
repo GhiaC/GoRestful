@@ -91,7 +91,7 @@ type NewsLayerVariables struct {
 }
 
 type AdminFileLayerVariables struct {
-	Files [] Struct.File
+	Files [] FileInner
 }
 
 type MessagesLayerVariables struct {

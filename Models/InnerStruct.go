@@ -15,6 +15,20 @@ type AnswerQuery struct {
 	Type     string `xorm:"varchar(40)"`
 }
 
+type FileInner struct {
+	Id          int64     `xorm:"pk autoincr"`
+	UserId      int
+	Description string    `xorm:"text not null"`
+	FileName    string    `xorm:"varchar(256) not null"`
+	Key         string    `xorm:"varchar(40) not null"`
+	Type        string    `xorm:"varchar(40) unique not null"`
+	AdminFile      bool
+	Created     time.Time `xorm:"created"`
+
+	Username    string `xorm:"varchar(256) unique not null"`
+}
+
+
 type MediaJoinFile struct {
 	Id      int64  `xorm:"pk autoincr"`
 	Pid     int64
