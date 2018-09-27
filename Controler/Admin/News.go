@@ -2,9 +2,9 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
-	"GoRestful/Models/Struct"
+	"../../Controler"
+	"../../Models"
+	"../../Models/Struct"
 	"html"
 )
 
@@ -39,7 +39,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 
 		var news []Struct.News
 		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
-
+		result.OptionFiles = Controler.Files()
 		result.News = news
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
 
@@ -52,7 +52,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 			News:        news,
 			Answer:      "",
 			SubmitValue: "Add News",}
-
+		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

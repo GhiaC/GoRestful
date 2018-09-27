@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"encoding/json"
 	"log"
-	"GoRestful/Controler"
-	"GoRestful/Models/Struct"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models/Struct"
+	"../../Models"
 )
 
 func AllNews(w http.ResponseWriter, r *http.Request) {

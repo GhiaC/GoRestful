@@ -2,11 +2,11 @@ package api
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models"
 	"encoding/json"
 	"log"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 

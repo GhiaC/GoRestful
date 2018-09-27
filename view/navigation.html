@@ -2,41 +2,52 @@
     <div class="loadingHeader">
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="container">
-                <div class="navbar-header page-scroll">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse"
-                            data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <span class="navbar-brand page-scroll">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        Bina</span>
-                </div>
+                <div class="navbar-inner">
+                    <div style="float:right;direction: rtl">
+                        <div class="navbar-header page-scroll">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                    data-target=".navbar-ex1-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
 
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="/">
-                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                                Home</a>
-                        </li>
-                    {{ if not .LoggedIn}}
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-                    {{end}}
-                    {{if .LoggedIn}}
-                        <li><a href="/admin/FirstLayer">First Layer</a></li>
-                        <li><a href="/admin/admins">Admin List</a></li>
-                        <li><a href="/admin/news">News</a></li>
-                        <li><a href="/admin/upload">Upload</a></li>
-                        <li><a href="/admin/messages">Messages</a></li>
-                        <li><a href="/admin/adduser">Add User</a></li>
-                        <li><a href="/admin/users">Users</a></li>
-                        <li><a href="/admin//logout">Logout</a></li>
-                    {{end}}
-                    </ul>
+                            <ul style="float: right;direction: rtl" class="nav navbar-nav">
+
+                                <div style="float: right;direction: rtl"
+                                     class="collapse navbar-collapse navbar-ex1-collapse">
+                                    <span class="navbar-brand page-scroll">بینا </span>
+                                </div>
+
+                            {{ if not .LoggedIn}}
+                                <li><a href="/login">ورود</a></li>
+                                <li><a href="/register">ثبت نام</a></li>
+                            {{end}}
+                            {{if .LoggedIn}}
+                                <li><a href="/admin//logout">خروج</a></li>
+                                <li><a href="/admin/admins">لیست مدیران</a></li>
+                                <li><a href="/admin/news">اخبار</a></li>
+                                <li><a href="/admin/upload">آپلود</a></li>
+                                <li><a href="/admin/messages">پیام ها</a></li>
+                            {{/*<li class="dropdown">*/}}
+                            {{/*<a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1*/}}
+                            {{/*<span class="caret"></span></a>*/}}
+                            {{/*<ul class="dropdown-menu">*/}}
+                                <li><a href="/admin/adduser">افزودن کاربر</a></li>
+                                <li><a href="/admin/users">لیست کاربران</a></li>
+                                <li><a href="/admin/FirstLayer">عنوان</a></li>
+                            {{/*</ul>*/}}
+                            {{/*</li>*/}}
+                            {{end}}
+                                <li>
+                                    <a href="/">
+                                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                        خانه</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

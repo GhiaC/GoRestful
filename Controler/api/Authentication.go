@@ -3,10 +3,10 @@ package api
 import (
 	"net/http"
 	"encoding/json"
-	"GoRestful/Models"
-	"GoRestful/Controler"
+	"../../Models"
+	"../../Controler"
 	"log"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 

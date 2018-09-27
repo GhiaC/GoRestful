@@ -2,14 +2,14 @@ package api
 
 import (
 	"net/http"
-	"GoRestful/Controler"
+	"../../Controler"
 	"encoding/json"
 	"log"
 	"github.com/gorilla/mux"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"strconv"
 	"github.com/go-xorm/builder"
-	"GoRestful/Models"
+	"../../Models"
 )
 
 func SubTitles(w http.ResponseWriter, r *http.Request) {

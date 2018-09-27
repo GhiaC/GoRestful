@@ -4,12 +4,12 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Username</th>
-            <th>Text</th>
-            <th>File</th>
-            <th>Type</th>
-            <th>Created Date</th>
-            <th>Answer</th>
+            <th>نام کاربری</th>
+            <th>متن</th>
+            <th>محتوا</th>
+            <th>نوع فایل</th>
+            <th>تاریخ ارسال</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@
             <td>{{.FileAddress}}</td>
             <td>{{.Type}}</td>
             <td>{{.Created}}</td>
-            <td><a href="/admin/message/answer/{{.Id}}">Answer</a></td>
+            <td><a href="/admin/message/answer/{{.Id}}">پاسخ دهید</a></td>
         </tr>
         {{end}}
         </tbody>

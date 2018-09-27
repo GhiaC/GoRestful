@@ -8,15 +8,21 @@
                     </div>
                     <form method="post">
                         <div class="form-group">
-                            <label for="title">Title :</label>
+                            <label for="title">عنوان :</label>
                             <input type="text" class="form-control" id="title" name="title">
                         </div>
                         <div class="form-group">
-                            <label for="Picture">Picture :</label>
-                            <input type="text" class="form-control" id="Picture" name="picture">
+                            <label for="Picture">انتخاب محتوا :</label>
+                            <select class="my-select" style="width: 100%;" id="Picture" name="picture">
+                            {{range .OptionFiles}}
+                                <option value="{{.Key}}" data-active="http://localhost:8080/file/?file={{.Key}}"
+                                        data-img-src="http://localhost:8080/file/?file={{.Key}}">{{.Description}}</option>
+                            {{end}}
+                            </select>
                         </div>
                         <div class="from-group">
-                            <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                            <button type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
                 </div>
@@ -26,13 +32,13 @@
 </div>
 
 <div class="well">
-    <h2>First Layer</h2>
+    <h2>لایه اول</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Title</th>
-            <th>Picture</th>
+            <th>عنوان</th>
+            <th>محتوا</th>
             <th></th>
         </tr>
         </thead>
@@ -41,7 +47,7 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
-            <td>{{.Picture}}</td>
+            <td>ٰٰ<img src="https://s8.ghiasi.me/file/?file={{.Picture}}"></td>
             <td><a href="/admin/SecondLayer/{{.Id}}">Add Subtitle</a></td>
         </tr>
         {{end}}

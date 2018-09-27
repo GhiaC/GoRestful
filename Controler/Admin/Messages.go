@@ -2,11 +2,11 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models"
 	"github.com/gorilla/mux"
 	"strconv"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 

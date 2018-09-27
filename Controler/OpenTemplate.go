@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"strings"
-	"GoRestful/Models"
+	"../Models"
 	"html"
 )
 

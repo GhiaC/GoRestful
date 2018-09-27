@@ -1,2 +1,22 @@
+<script>
+    function formatState (state) {
+        console.log(state);
+        if (!state.id) {
+            return state.text;
+        }
+        if (state.text == "") {
+            state.text = "Empty!";
+        }
+        var baseUrl = "https://s8.ghiasi.me/file/?file="+state.id;
+        var $state = $(
+                '<span><img style="width: 100px" src="' + baseUrl +'" alt="No Pic!" class="img-flag" /> ' + state.text + '</span>'
+        );
+        return $state;
+    };
+
+    $(".my-select").select2({
+        templateResult: formatState
+    });
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 package Controler
 
-import "GoRestful/Models"
+import "../Models"
 
 var Configuration = Models.Configuration{}

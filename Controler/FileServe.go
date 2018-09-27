@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"io"
 	"os"
-	"GoRestful/Models/Struct"
+	"../Models/Struct"
 	//"github.com/go-xorm/builder"
 )
 

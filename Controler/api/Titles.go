@@ -2,11 +2,11 @@ package api
 
 import (
 	"net/http"
-	"GoRestful/Controler"
+	"../../Controler"
 	"encoding/json"
 	"log"
-	"GoRestful/Models/Struct"
-	"GoRestful/Models"
+	"../../Models/Struct"
+	"../../Models"
 )
 
 func Titles(w http.ResponseWriter, r *http.Request) {

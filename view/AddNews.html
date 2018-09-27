@@ -8,16 +8,20 @@
                     </div>
                     <form method="post">
                         <div class="form-group">
-                            <label for="Title">Title :</label>
+                            <label for="Title">عنوان :</label>
                             <input type="text" class="form-control" id="Title" name="Title">
                         </div>
                         <div class="form-group">
-                            <label for="usr">File Address :</label>
-                            <input type="text" class="form-control" id="usr" name="filename">
+                            <label for="filename">انتخاب محتوا :</label>
+                            <select class="my-select" style="width: 100%;" id="filename" name="filename">
+                            {{range .OptionFiles}}
+                                <option value="{{.Key}}">{{.Description}}</option>
+                            {{end}}
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="editor">Text :</label>
+                            <label for="editor">متن :</label>
                             <div id="toolbar-container"></div>
                             <div style="height: 300px" class="form-control" id="editor"></div>
                             <input type="hidden" name="text" id="dash_new_shout_textarea_hidden">
@@ -40,15 +44,15 @@
 </div>
 
 <div class="well">
-    <h2>News</h2>
+    <h2>خبرها</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Title</th>
-            {{/*<th>Text</th>*/}}
-            <th>File Address</th>
-            <th>Created Date</th>
+            <th>عنوان</th>
+        {{/*<th>Text</th>*/}}
+            <th>محتوا</th>
+            <th>تاریخ ارسال</th>
         </tr>
         </thead>
         <tbody>
@@ -56,7 +60,7 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
-            {{/*<td>{{unescape .Text}}</td>*/}}
+        {{/*<td>{{unescape .Text}}</td>*/}}
             <td><img src="https://s8.ghiasi.me/file/?file={{.FileName}}"></td>
             <td>{{.Created}}</td>
         </tr>

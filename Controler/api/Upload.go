@@ -3,14 +3,14 @@ package api
 import (
 	"net/http"
 	"mime/multipart"
-	"GoRestful/Models"
+	"../../Models"
 	"io/ioutil"
 	"fmt"
 	"encoding/json"
 	"log"
-	"GoRestful/Controler"
+	"../../Controler"
 	"strconv"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 )
 
 var fileKey = Controler.TokenGenerator()

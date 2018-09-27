@@ -3,16 +3,16 @@ package main
 import (
 	"net/http"
 	_ "github.com/go-sql-driver/mysql"
-	"GoRestful/Controler"
+	"./Controler"
 	"log"
-	"GoRestful/Controler/api"
+	"./Controler/api"
 	"github.com/gorilla/mux"
-	"GoRestful/Controler/Admin"
+	"./Controler/Admin"
 	"fmt"
 	//"github.com/nytimes/gziphandler"
 	"github.com/tkanos/gonfig"
 	"time"
-	"GoRestful/Models"
+	"./Models"
 )
 
 func main() {
@@ -20,7 +20,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fs := http.FileServer(http.Dir("Resource"))
 	http.Handle("/Resource/", http.StripPrefix("/Resource/", fs))
 
@@ -77,15 +76,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+Controler.Configuration.Port, nil))
 }
 
-//type debugLogger struct{}
-//
-//func (d debugLogger) Write(p []byte) (n int, err error) {
-//	s := string(p)
-//	if strings.Contains(s, "multiple response.WriteHeader") {
-//		debug.PrintStack()
-//	}
-//	return os.Stderr.Write(p)
-//}
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
@@ -101,8 +91,8 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		LoginStatus: "you aren't logged in",
 	}
 	if ok, username, _ := Controler.Authenticated(r); ok {
-		HomePageVars.LoginStatus = "dear " + username + ", you are logged in"
+		HomePageVars.LoginStatus = "" + username + " عزیز"+ ", خوش آمدید."
 	}
 
-	Controler.OpenTemplate(w, r, HomePageVars, "homepage.html", Models.HeaderVariables{Title: "Authentication GO"})
+	Controler.OpenTemplate(w, r, HomePageVars, "homepage.html", Models.HeaderVariables{Title: "پنل مدیریت بینا"})
 }

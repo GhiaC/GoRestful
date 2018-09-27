@@ -2,9 +2,9 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
-	"GoRestful/Models/Struct"
+	"../../Controler"
+	"../../Models"
+	"../../Models/Struct"
 	"mime/multipart"
 	"io/ioutil"
 	"fmt"

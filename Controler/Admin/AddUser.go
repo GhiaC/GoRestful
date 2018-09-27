@@ -2,9 +2,9 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Models"
-	"GoRestful/Controler"
-	"GoRestful/Models/Struct"
+	"../../Models"
+	"../../Controler"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 

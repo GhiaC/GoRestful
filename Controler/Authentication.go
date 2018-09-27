@@ -2,8 +2,8 @@ package Controler
 
 import (
 	"net/http"
-	"GoRestful/Models"
-	"GoRestful/Models/Struct"
+	"../Models"
+	"../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 

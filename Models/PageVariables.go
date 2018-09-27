@@ -1,6 +1,6 @@
 package Models
 
-import "GoRestful/Models/Struct"
+import "../Models/Struct"
 
 type PageVariables struct {
 	Answer string
@@ -39,6 +39,7 @@ type FirstLayerVariables struct {
 	Answer string
 	//Url         string
 	SubmitValue string
+	OptionFiles []Struct.File
 }
 
 type SecondLayerVariables struct {
@@ -48,6 +49,7 @@ type SecondLayerVariables struct {
 	Answer string
 	//Url         string
 	SubmitValue string
+	OptionFiles []Struct.File
 }
 
 type MediaLayerVariables struct {
@@ -57,6 +59,7 @@ type MediaLayerVariables struct {
 	Answer string
 	//Url         string
 	SubmitValue string
+	OptionFiles []Struct.File
 }
 
 type SubMediaLayerVariables struct {
@@ -66,6 +69,7 @@ type SubMediaLayerVariables struct {
 	Answer string
 	//Url         string
 	SubmitValue string
+	OptionFiles []Struct.File
 }
 type AnswerLayerVariables struct {
 	Msg     AnswerQuery
@@ -83,6 +87,7 @@ type NewsLayerVariables struct {
 	Answer      string
 	Url         string
 	SubmitValue string
+	OptionFiles []Struct.File
 }
 
 type AdminFileLayerVariables struct {

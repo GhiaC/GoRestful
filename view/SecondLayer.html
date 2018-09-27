@@ -8,17 +8,17 @@
                     </div>
                     <form method="post">
                         <div class="form-group">
-                            <label for="usr">Subtitle :</label>
+                            <label for="usr">زیرعنوان (لایه دوم) :</label>
                             <input type="text" class="form-control" id="usr" name="username">
                         </div>
                         <div class="form-group">
-                            <label for="pic1">Pic 1 :</label>
-                            <input type="text" class="form-control" id="pic1" name="pic1">
+                            <label for="pic1">محتوا :</label>
+                            <select class="my-select" style="width: 100%;" id="pic1" name="pic1">
+                            {{range .OptionFiles}}
+                                <option value="{{.Key}}">{{.Description}}</option>
+                            {{end}}
+                            </select>
                         </div>
-                    {{/*<div class="form-group">*/}}
-                    {{/*<label for="pic2">Pic 2 :</label>*/}}
-                    {{/*<input type="text" class="form-control" id="pic2" name="pic2">*/}}
-                    {{/*</div>*/}}
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}"
                                     class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
@@ -31,7 +31,7 @@
 </div>
 
 <div class="well">
-    <h2>Subtitles of {{.TitleId}} Layer</h2>
+    <h2> زیرعنوان لایه{{.TitleId}}</h2>
     <table class="table table-striped">
         <thead>
         <tr>

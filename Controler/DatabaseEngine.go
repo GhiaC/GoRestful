@@ -6,7 +6,7 @@ import (
 	//"GoRestful/*"
 	//"log"
 	//"log/syslog"
-	"GoRestful/Models/Struct"
+	"../Models/Struct"
 )
 
 var engine *xorm.Engine

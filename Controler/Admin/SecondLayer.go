@@ -2,11 +2,11 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models"
 	"strconv"
 	"github.com/gorilla/mux"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 
@@ -41,7 +41,7 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		var subtitles []Struct.Subtitle
 		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"Pid": int64(id)}).
 			Find(&subtitles)
-
+		result.OptionFiles = Controler.Files()
 		result.Subtitles = subtitles
 		Controler.OpenTemplate(w, r, result, "SecondLayer.html", Models.HeaderVariables{Title: "SecondLayer"})
 
@@ -54,7 +54,7 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 			Subtitles:   subtitles,
 			Answer:      "",
 			SubmitValue: "Add Subtitle",}
-
+		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "SecondLayer.html", Models.HeaderVariables{Title: "SecondLayer"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

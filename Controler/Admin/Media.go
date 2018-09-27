@@ -2,11 +2,11 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models"
 	"github.com/gorilla/mux"
 	"strconv"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 
@@ -40,7 +40,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 			//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.pid ").
 			Where(builder.Eq{"pid": vars["id"]}).
 			Find(&medias)
-
+		result.OptionFiles = Controler.Files()
 		result.Medias = medias
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
 
@@ -56,7 +56,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 			Medias:      medias,
 			Answer:      "",
 			SubmitValue: "Add Media",}
-
+		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Media"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

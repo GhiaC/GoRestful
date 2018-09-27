@@ -2,9 +2,9 @@ package Admin
 
 import (
 	"net/http"
-	"GoRestful/Controler"
-	"GoRestful/Models"
-	"GoRestful/Models/Struct"
+	"../../Controler"
+	"../../Models"
+	"../../Models/Struct"
 )
 
 func FirstLayer(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +35,7 @@ func FirstLayer(w http.ResponseWriter, r *http.Request) {
 		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title", "Picture").
 			Find(&titles)
 		vars.Titles = titles
+		vars.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, vars, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
 
 	} else if ok, _, _ := Controler.Authenticated(r); ok {
@@ -46,7 +47,7 @@ func FirstLayer(w http.ResponseWriter, r *http.Request) {
 			Titles:      titles,
 			Answer:      "",
 			SubmitValue: "Add Title",}
-
+		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
 		//}
 	} else {

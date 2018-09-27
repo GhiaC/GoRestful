@@ -2,12 +2,12 @@ package api
 
 import (
 	"net/http"
-	"GoRestful/Controler"
+	"../../Controler"
 	"encoding/json"
 	"log"
 	"github.com/gorilla/mux"
-	"GoRestful/Models/Struct"
-	"GoRestful/Models"
+	"../../Models/Struct"
+	"../../Models"
 )
 
 func SubMedia(w http.ResponseWriter, r *http.Request) {

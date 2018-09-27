@@ -3,10 +3,10 @@ package Admin
 import (
 	"net/http"
 	"github.com/gorilla/mux"
-	"GoRestful/Controler"
-	"GoRestful/Models"
+	"../../Controler"
+	"../../Models"
 	"strconv"
-	"GoRestful/Models/Struct"
+	"../../Models/Struct"
 	"github.com/go-xorm/builder"
 )
 
@@ -39,7 +39,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 		Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().
 			Where(builder.Eq{"pid": vars["id"]}).
 			Find(&SubMedias)
-
+		result.OptionFiles = Controler.Files()
 		result.SubMedias = SubMedias
 		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedias"})
 
@@ -55,7 +55,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 			SubMedias:   medias,
 			Answer:      "",
 			SubmitValue: "Add SubMedia",}
-
+		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedia"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
