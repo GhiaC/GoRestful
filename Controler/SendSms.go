@@ -1,7 +1,7 @@
 package Controler
 
 import (
-	"GoRestful/Models/Struct"
+	"../Models/Struct"
 	"bytes"
 	"encoding/json"
 	"log"
