@@ -11,7 +11,7 @@ func Authenticated(r *http.Request) (bool, string, int, bool) {
 	session, _ := Store.Get(r, "cookie-name")
 
 	_, ok2 := session.Values["type"].(int)
-	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth || ok2 {
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth || !ok2 {
 		//http.Error(w, "Forbidden", http.StatusForbidden)
 		return false, "", 0, false
 	}
