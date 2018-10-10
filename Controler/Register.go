@@ -17,7 +17,7 @@ func RegisterNormal(w http.ResponseWriter, r *http.Request) {
 
 func register(w http.ResponseWriter, r *http.Request, mode int) {
 
-	if ok, _, _, isRootAdmin := Authenticated(r); !(ok && isRootAdmin && mode == 0) || !(ok && mode == 1) {
+	if ok, _, _, isRootAdmin := Authenticated(r); !(ok && isRootAdmin && mode == 1) || !(!ok && mode == 0) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
