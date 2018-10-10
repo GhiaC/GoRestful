@@ -91,18 +91,18 @@
                             <label for="editor">Text :</label>
                             <div id="toolbar-container"></div>
                             <textarea class="form-control" id="editor" name="text"></textarea>
-                            <script>
-                                DecoupledEditor
-                                        .create(document.querySelector('#editor'))
-                                        .then(editor => {
-                                            const toolbarContainer = document.querySelector('#toolbar-container');
+                            {{/*<script>*/}}
+                                {{/*DecoupledEditor*/}}
+                                        {{/*.create(document.querySelector('#editor'))*/}}
+                                        {{/*.then(editor => {*/}}
+                                            {{/*const toolbarContainer = document.querySelector('#toolbar-container');*/}}
 
-                                            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-                                        })
-                                        .catch(error => {
-                                            console.error(error);
-                                        });
-                            </script>
+                                            {{/*toolbarContainer.appendChild(editor.ui.view.toolbar.element);*/}}
+                                        {{/*})*/}}
+                                        {{/*.catch(error => {*/}}
+                                            {{/*console.error(error);*/}}
+                                        {{/*});*/}}
+                            {{/*</script>*/}}
                         </div>
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}"

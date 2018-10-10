@@ -1,13 +1,13 @@
 package api
 
 import (
-	"net/http"
 	"../../Controler"
 	"../../Models"
-	"encoding/json"
-	"log"
 	"../../Models/Struct"
+	"encoding/json"
 	"github.com/go-xorm/builder"
+	"log"
+	"net/http"
 )
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +44,10 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 					Response.Result = true
 					Response.Error = ""
 					Response.MessageId = newMessage.Id
-					Controler.SendSms(Controler.GetAdminPhonenumber(),id,text,false)
+					phonenumber := Controler.GetAdminPhonenumber()
+					if phonenumber != "Error" {
+						go Controler.SendSms(phonenumber, id, text, false)
+					}
 				} else {
 					Response.Error = "Database Problem!"
 				}

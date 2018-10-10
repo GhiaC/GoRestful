@@ -65,15 +65,26 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetUserPhonenumber(id int) string {
+//var messages []Models.AnswerQuery
+//Controler.GetEngine().Table(Struct.Message{}).
+//Select("user.username,message.*,file.type").
+//Join("INNER", Struct.User{}, "message.user_id = user.id ").
+//Join("LEFT", Struct.File{}, "message.file_address = file.key").
+//Where(builder.Eq{"user_id": userid}).Or(builder.Eq{"answer_to": userid}).OrderBy("message.created").
+//Find(&messages)
+
+func GetUserPhonenumber(message_id int) string {
 	var phonenumber string
 	engine := GetEngine()
-	has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Id": id}).
-		Cols("phone_number").Get(&phonenumber)
+	has, err := engine.Table(Struct.User{}).
+		Select("user.phone_number").
+		Join("INNER", Struct.Message{}, "message.user_id = user.id").
+		Where(builder.Eq{"message.id": message_id}).
+		Get(&phonenumber)
 	if has && err == nil && phonenumber != "" {
 		return phonenumber
 	} else {
 		println("error in find user phonenumber")
-		return "09360840616"
+		return "Error"
 	}
 }
