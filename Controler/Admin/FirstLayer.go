@@ -1,14 +1,14 @@
 package Admin
 
 import (
-	"net/http"
 	"../../Controler"
 	"../../Models"
 	"../../Models/Struct"
+	"net/http"
 )
 
 func FirstLayer(w http.ResponseWriter, r *http.Request) {
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		title := r.PostForm.Get("title")
 		picture := r.PostForm.Get("picture")
@@ -38,7 +38,7 @@ func FirstLayer(w http.ResponseWriter, r *http.Request) {
 		vars.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, vars, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
 
-	} else if ok, _, _ := Controler.Authenticated(r); ok {
+	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 
 		var titles []Struct.Title
 		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title", "Picture").Find(&titles)

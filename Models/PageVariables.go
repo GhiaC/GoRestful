@@ -31,6 +31,7 @@ type HeaderVariables struct {
 
 type NavigationVariables struct {
 	LoggedIn bool
+	IsRootAdmin bool
 }
 
 type FirstLayerVariables struct {

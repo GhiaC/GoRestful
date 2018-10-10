@@ -12,7 +12,7 @@ import (
 
 func News(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		fileName := r.PostForm.Get("filename")
@@ -43,7 +43,7 @@ func News(w http.ResponseWriter, r *http.Request) {
 		result.News = news
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
 
-	} else if ok, _, _ := Controler.Authenticated(r); ok {
+	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 
 		var news []Struct.News
 		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)

@@ -1,20 +1,20 @@
 package Controler
 
 import (
-	"net/http"
 	"../Models"
 	"../Models/Struct"
 	"github.com/go-xorm/builder"
+	"net/http"
 )
 
-func Authenticated(r *http.Request) (bool, string, int) {
+func Authenticated(r *http.Request) (bool, string, int, bool) {
 	session, _ := Store.Get(r, "cookie-name")
 
 	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
 		//http.Error(w, "Forbidden", http.StatusForbidden)
-		return false, "", 0
+		return false, "", 0, false
 	}
-	return true, session.Values["username"].(string), session.Values["id"].(int)
+	return true, session.Values["username"].(string), session.Values["id"].(int), session.Values["type"].(int) == 0
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -31,21 +31,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if submit == "Login" && (username == "" || password == "") {
 		vars.Answer = "username or password is empty"
 	} else if username != "" && password != "" {
-		var id int
+		var user Struct.User
 		engine := GetEngine()
-		has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Username":username,"Password":password,"Type":1}).Cols("id").Get(&id)
-		if has && err == nil && id > 0 {
+		has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Username": username, "Password": password}).
+			Cols("id", "type").Get(&user)
+		if has && err == nil && user.Id > 0 && user.Type != 2 {
 			session, _ := Store.Get(r, "cookie-name")
 			session.Values["authenticated"] = true
 			session.Values["username"] = username
-			session.Values["id"] = id
+			session.Values["id"] = user.Id
+			session.Values["type"] = user.Type
 			session.Save(r, w)
 		} else {
 			vars.Answer = "username or password is wrong"
 		}
 	}
 
-	if ok, _, _ := Authenticated(r); !ok {
+	if ok, _, _, _ := Authenticated(r); !ok {
 		OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Login"})
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -60,4 +62,17 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 
+}
+
+func GetUserPhonenumber(id int) string {
+	var phonenumber string
+	engine := GetEngine()
+	has, err := engine.Table(Struct.User{}).Where(builder.Eq{"Id": id}).
+		Cols("phone_number").Get(&phonenumber)
+	if has && err == nil && phonenumber != "" {
+		return phonenumber
+	} else {
+		println("error in find user phonenumber")
+		return "09360840616"
+	}
 }

@@ -1,16 +1,16 @@
 package Admin
 
 import (
-	"net/http"
-	"../../Models"
 	"../../Controler"
+	"../../Models"
 	"../../Models/Struct"
 	"github.com/go-xorm/builder"
+	"net/http"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
 
-	if ok, _, _ := Controler.Authenticated(r); !ok {
+	if ok, _, _, _ := Controler.Authenticated(r); !ok {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()

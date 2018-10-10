@@ -1,18 +1,18 @@
 package Admin
 
 import (
-	"net/http"
 	"../../Controler"
 	"../../Models"
-	"github.com/gorilla/mux"
-	"strconv"
 	"../../Models/Struct"
 	"github.com/go-xorm/builder"
+	"github.com/gorilla/mux"
+	"net/http"
+	"strconv"
 )
 
 func Media(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _, _:= Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		picture := r.PostForm.Get("picture")
@@ -44,7 +44,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		result.Medias = medias
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
 
-	} else if ok, _, _ := Controler.Authenticated(r); ok {
+	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 
 		var medias []Struct.Media
 		Controler.GetEngine().Table(Struct.Media{}).AllCols().

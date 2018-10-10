@@ -12,7 +12,7 @@ import (
 
 func SecondLayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
 		submit := r.PostForm.Get("submit")
@@ -45,7 +45,7 @@ func SecondLayer(w http.ResponseWriter, r *http.Request) {
 		result.Subtitles = subtitles
 		Controler.OpenTemplate(w, r, result, "SecondLayer.html", Models.HeaderVariables{Title: "SecondLayer"})
 
-	} else if ok, _, _ := Controler.Authenticated(r); ok {
+	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 		var subtitles []Struct.Subtitle
 		Controler.GetEngine().Table(Struct.Subtitle{}).AllCols().Where(builder.Eq{"Pid": vars["id"]}).Find(&subtitles)
 

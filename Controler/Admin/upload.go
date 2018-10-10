@@ -15,7 +15,7 @@ import (
 )
 
 func UploadPage(w http.ResponseWriter, r *http.Request) {
-	if ok, _, _ := Controler.Authenticated(r); ok {
+	if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 
 		var files []Models.FileInner
 		Controler.GetEngine().Table(Struct.File{}).Select("file.*,user.username").
@@ -56,7 +56,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}, Admin
 		Result:   false,
 		FileName: "",
 	}
-	logged, _, id := Controler.Authenticated(r)
+	logged, _, id ,_:= Controler.Authenticated(r)
 	if !logged && !(id > 0) {
 		response.Error = "Access denied"
 		jsonResponse(w, http.StatusOK, &response)

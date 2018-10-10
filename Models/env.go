@@ -5,4 +5,10 @@ type Configuration struct {
 	PassDB string
 	UserDB string
 	DB     string
+
+	//SMS
+	AdminPhonenumber string
+	UserApiKey       string
+	SecretKey        string
+	LineNumber       string
 }

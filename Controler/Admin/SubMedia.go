@@ -12,7 +12,7 @@ import (
 
 func SubMedia(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		picture := r.PostForm.Get("picture")
@@ -43,7 +43,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 		result.SubMedias = SubMedias
 		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedias"})
 
-	} else if ok, _, _ := Controler.Authenticated(r); ok {
+	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
 
 		var medias []Struct.SubMedia
 		Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().

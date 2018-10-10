@@ -2,5 +2,10 @@
   "Port": "80",
   "UserDB": "root",
   "PassDB": "",
-  "DB": "restful"
+  "DB": "restful",
+
+  "AdminPhonenumber":"",
+  "UserApiKey" : "",
+  "SecretKey" :"",
+  "LineNumber":""
 }

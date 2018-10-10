@@ -22,7 +22,6 @@
 
                             {{ if not .LoggedIn}}
                                 <li><a href="/login">ورود</a></li>
-                                <li><a href="/register">ثبت نام</a></li>
                             {{end}}
                             {{if .LoggedIn}}
                                 <li><a href="/admin//logout">خروج</a></li>
@@ -30,6 +29,9 @@
                                 <li><a href="/admin/news">اخبار</a></li>
                                 <li><a href="/admin/upload">آپلود</a></li>
                                 <li><a href="/admin/messages">پیام ها</a></li>
+                                    {{if .IsRootAdmin}}
+                                        <li><a href="/admin/register">افزودن ادمین</a></li>
+                                    {{end}}
                             {{/*<li class="dropdown">*/}}
                             {{/*<a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1*/}}
                             {{/*<span class="caret"></span></a>*/}}

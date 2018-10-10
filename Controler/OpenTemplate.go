@@ -1,13 +1,13 @@
 package Controler
 
 import (
-	"net/http"
+	"../Models"
+	"fmt"
+	"html"
 	"html/template"
 	"io/ioutil"
-	"fmt"
+	"net/http"
 	"strings"
-	"../Models"
-	"html"
 )
 
 func writeHtml() {
@@ -33,8 +33,8 @@ func OpenTemplate(w http.ResponseWriter, r *http.Request, vars interface{}, file
 	s1.Execute(w, headerVar)
 
 	s2 := templates.Lookup("navigation.html")
-	loggedIn, _, _ := Authenticated(r)
-	s2.Execute(w, Models.NavigationVariables{LoggedIn: loggedIn})
+	loggedIn, _, _, isRootAdmin := Authenticated(r)
+	s2.Execute(w, Models.NavigationVariables{LoggedIn: loggedIn, IsRootAdmin: isRootAdmin})
 
 	s3 := templates.Lookup("jumbotron.html")
 	s3.Execute(w, nil)

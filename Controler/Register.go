@@ -1,15 +1,23 @@
 package Controler
 
 import (
-	"net/http"
 	"../Models"
 	"../Models/Struct"
 	"github.com/go-xorm/builder"
+	"net/http"
 )
 
-func Register(w http.ResponseWriter, r *http.Request) {
+func RegisterRoot(w http.ResponseWriter, r *http.Request) {
+	register(w, r, 0)
+}
 
-	if ok, _, _ := Authenticated(r); ok {
+func RegisterNormal(w http.ResponseWriter, r *http.Request) {
+	register(w, r, 1)
+}
+
+func register(w http.ResponseWriter, r *http.Request, mode int) {
+
+	if ok, _, _, isRootAdmin := Authenticated(r); !(ok && isRootAdmin) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
 		r.ParseForm()
@@ -28,7 +36,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := GetEngine()
-			newUser := Struct.NewUser(username, password,"","","",1) //Type = 1 is for admin
+			newUser := Struct.NewUser(username, password, "", "", "", mode) //Type = 1 is for admin
 			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"

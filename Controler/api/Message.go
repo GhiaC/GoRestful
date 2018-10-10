@@ -44,6 +44,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 					Response.Result = true
 					Response.Error = ""
 					Response.MessageId = newMessage.Id
+					Controler.SendSms(Controler.GetAdminPhonenumber(),id,text,false)
 				} else {
 					Response.Error = "Database Problem!"
 				}

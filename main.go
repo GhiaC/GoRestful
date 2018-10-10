@@ -27,7 +27,7 @@ func main() {
 
 	r.HandleFunc("/", HomePage)                   //DONE
 	r.HandleFunc("/login", Controler.Login)       //DONE
-	r.HandleFunc("/register", Controler.Register) //DONE
+	r.HandleFunc("/register/root", Controler.RegisterRoot) //DONE
 
 	s1 := r.PathPrefix("/api").Subrouter()
 	{
@@ -53,6 +53,7 @@ func main() {
 
 	s2 := r.PathPrefix("/admin").Subrouter()
 	{
+		s2.HandleFunc("/register", Controler.RegisterNormal) //DONE
 		s2.HandleFunc("/FirstLayer", Admin.FirstLayer)               //DONE
 		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer) //DONE
 		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media)             //DONE
@@ -90,7 +91,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		Time: now.Format("15:04:05"),
 		LoginStatus: "you aren't logged in",
 	}
-	if ok, username, _ := Controler.Authenticated(r); ok {
+	if ok, username, _ ,_:= Controler.Authenticated(r); ok {
 		HomePageVars.LoginStatus = "" + username + " عزیز"+ ", خوش آمدید."
 	}
 
