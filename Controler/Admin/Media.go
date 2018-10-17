@@ -12,7 +12,7 @@ import (
 
 func Media(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	if ok, _, _, _:= Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		picture := r.PostForm.Get("picture")
@@ -20,7 +20,7 @@ func Media(w http.ResponseWriter, r *http.Request) {
 
 		result := Models.MediaLayerVariables{
 			Answer:      "",
-			SubmitValue: "Add Media",
+			SubmitValue: "افزودن مدیا",
 		}
 
 		if submit != "" && (text == "") {
@@ -35,17 +35,18 @@ func Media(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		var medias []Struct.Media
-		Controler.GetEngine().Table(Struct.Media{}).AllCols().
-			//Join("INNER", Struct.Subtitle{}, "subtitle.id = media.pid ").
-			Where(builder.Eq{"pid": vars["id"]}).
-			Find(&medias)
-		result.OptionFiles = Controler.Files()
-		result.Medias = medias
-		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Medias"})
+		http.Redirect(w, r, r.RequestURI+"?result="+result.Answer, http.StatusSeeOther)
 
-	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
+	} else {
+		http.Redirect(w, r, "/", http.StatusForbidden)
+	}
+}
 
+func MediaGet(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if ok, _, _, _ := Controler.Authenticated(r); ok {
+		r.ParseForm()
+		resultInsert := r.Form.Get("result")
 		var medias []Struct.Media
 		Controler.GetEngine().Table(Struct.Media{}).AllCols().
 			Where(builder.Eq{"pid": vars["id"]}).
@@ -54,8 +55,8 @@ func Media(w http.ResponseWriter, r *http.Request) {
 		result := Models.MediaLayerVariables{
 			TitleId:     vars["id"],
 			Medias:      medias,
-			Answer:      "",
-			SubmitValue: "Add Media",}
+			Answer:      resultInsert,
+			SubmitValue: "افزودن مدیا",}
 		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "AddMedia.html", Models.HeaderVariables{Title: "Media"})
 	} else {

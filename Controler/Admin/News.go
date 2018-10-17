@@ -1,18 +1,16 @@
 package Admin
 
 import (
-	"net/http"
 	"../../Controler"
 	"../../Models"
 	"../../Models/Struct"
 	"html"
+	"net/http"
 )
-
-
 
 func News(w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
-	if ok, _, _ ,_:= Controler.Authenticated(r); ok && r.Method == "POST" {
+	if ok, _, _, _ := Controler.Authenticated(r); ok && r.Method == "POST" {
 		r.ParseForm()
 		text := r.PostForm.Get("text")
 		fileName := r.PostForm.Get("filename")
@@ -36,21 +34,22 @@ func News(w http.ResponseWriter, r *http.Request) {
 				result.Answer = "Successful."
 			}
 		}
+		http.Redirect(w, r, r.RequestURI+"?result="+result.Answer, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
 
-		var news []Struct.News
-		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
-		result.OptionFiles = Controler.Files()
-		result.News = news
-		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})
-
-	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
-
+func NewsGet(w http.ResponseWriter, r *http.Request) {
+	if ok, _, _, _ := Controler.Authenticated(r); ok {
+		r.ParseForm()
+		resultInsert := r.Form.Get("result")
 		var news []Struct.News
 		Controler.GetEngine().Table(Struct.News{}).AllCols().OrderBy("created").Find(&news)
 
 		result := Models.NewsLayerVariables{
 			News:        news,
-			Answer:      "",
+			Answer:      resultInsert,
 			SubmitValue: "Add News",}
 		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "AddNews.html", Models.HeaderVariables{Title: "News"})

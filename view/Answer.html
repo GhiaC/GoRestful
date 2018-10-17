@@ -37,6 +37,8 @@
                         <th>متن</th>
                         <th>محتوا</th>
                         <th>تاریخ ارسال</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -49,6 +51,8 @@
                             <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.FileAddress}}"
                                  alt="No Pic"></td>
                         <td>{{.Created}}</td>
+                        <td><a class="btn btn-warning" href="/admin/edit/message/{{.Id}}">ویرایش</a></td>
+                        <td><a class="btn btn-danger" href="/admin/delete/message/{{.Id}}">حذف</a></td>
                     </tr>
                     {{end}}
                     </tbody>

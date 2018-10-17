@@ -21,7 +21,6 @@ func UploadPage(w http.ResponseWriter, r *http.Request) {
 		Controler.GetEngine().Table(Struct.File{}).Select("file.*,user.username").
 			Join("INNER", Struct.User{}, "file.user_id = user.id ").
 			Where(builder.Eq{"admin_file": true}).Find(&files)
-
 		result := Models.AdminFileLayerVariables{
 			Files: files,
 		}

@@ -9,9 +9,8 @@ import (
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
-
 	if ok, _, _, _ := Controler.Authenticated(r); !ok {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusForbidden)
 	} else {
 		r.ParseForm()
 		username := r.PostForm.Get("username")
@@ -19,26 +18,37 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		name := r.PostForm.Get("name")
 		IMEI := r.PostForm.Get("IMEI")
 		password := r.PostForm.Get("password")
-		submit := r.PostForm.Get("submit")
 
 		vars := Models.LoginPageVariables{
 			Answer:      "",
-			SubmitValue: "Add User",
+			SubmitValue: "افزودن کاربر",
 		}
 
-		if submit != "" && (username == "" || password == "") {
+		if username == "" || password == "" {
 			vars.Answer = "username or password is empty"
 		} else if hasUser(username) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := Controler.GetEngine()
-			newUser := Struct.NewUser(username, password, name, PhoneNumber, IMEI, 2) // type 2 = user
+			newUser := Struct.NewUser(username, password, name, PhoneNumber, IMEI, 2, 1) // type 2 = user
 			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"
 			}
 		}
-		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "Add User"})
+		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "افزودن کاربر"})
+	}
+}
+
+func AddUserGet(w http.ResponseWriter, r *http.Request) {
+	if ok, _, _, _ := Controler.Authenticated(r); !ok {
+		http.Redirect(w, r, "/", http.StatusForbidden)
+	} else {
+		vars := Models.LoginPageVariables{
+			Answer:      "",
+			SubmitValue: "افزودن کاربر",
+		}
+		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "افزودن کاربر"})
 	}
 }
 

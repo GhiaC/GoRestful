@@ -47,7 +47,9 @@
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
             <td><img style="width: 100px" src="https://s8.ghiasi.me/file/file/?file={{.Picture}}"></td>
-            <td><a href="/admin/SubMedia/{{.Id}}">Add SubMedia</a></td>
+            <td><a class="btn btn-success" href="/admin/SubMedia/{{.Id}}">Add SubMedia</a></td>
+            <td><a class="btn btn-warning" href="/admin/edit/SubMedia/{{.Pid}}/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/SubMedia/{{.Pid}}/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

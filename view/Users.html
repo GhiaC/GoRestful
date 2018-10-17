@@ -8,6 +8,8 @@
             <th>نام</th>
             <th>شماره تماس</th>
             <th>IMEI</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -18,6 +20,8 @@
             <td>{{.Name}}</td>
             <td>{{.PhoneNumber}}</td>
             <td>{{.Imei}}</td>
+            <td><a class="btn btn-warning" href="/admin/edit/user/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/user/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

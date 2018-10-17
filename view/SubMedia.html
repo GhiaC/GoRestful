@@ -1,4 +1,5 @@
-git<div class="well">
+git
+<div class="well">
     <div class="jumbotron">
         <div class="container">
             <div class="row" id="resume">
@@ -39,6 +40,8 @@ git<div class="well">
             <th>ID</th>
             <th>SubMedia</th>
             <th>Picture</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -46,7 +49,9 @@ git<div class="well">
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Text}}</td>
-            <td><img  style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Url}}"></td>
+            <td><img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Url}}"></td>
+            <td><a class="btn btn-warning" href="/admin/edit/SubMedia/{{.Pid}}/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/SubMedia/{{.Pid}}/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

@@ -29,28 +29,27 @@ func FirstLayer(w http.ResponseWriter, r *http.Request) {
 				vars.Answer = "Successful."
 			}
 		}
+		http.Redirect(w, r, r.RequestURI+"?result="+vars.Answer, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, "/", http.StatusForbidden)
+	}
+}
 
-		var titles []Struct.Title
-
-		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title", "Picture").
-			Find(&titles)
-		vars.Titles = titles
-		vars.OptionFiles = Controler.Files()
-		Controler.OpenTemplate(w, r, vars, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
-
-	} else if ok, _, _ ,_:= Controler.Authenticated(r); ok {
-
+func FirstLayerGet(w http.ResponseWriter, r *http.Request) {
+	if ok, _, _, _ := Controler.Authenticated(r); ok {
+		r.ParseForm()
+		resultInsert := r.Form.Get("result")
 		var titles []Struct.Title
 		Controler.GetEngine().Table(Struct.Title{}).Cols("Id", "Title", "Picture").Find(&titles)
 
 		result := Models.FirstLayerVariables{
 			Titles:      titles,
-			Answer:      "",
+			Answer:      resultInsert,
 			SubmitValue: "Add Title",}
 		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "FirstLayer.html", Models.HeaderVariables{Title: "FirstLayer"})
 		//}
 	} else {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusForbidden)
 	}
 }

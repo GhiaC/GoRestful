@@ -5,6 +5,8 @@
         <tr>
             <th>ID</th>
             <th>نام کاربری</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -12,6 +14,8 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Username}}</td>
+            <td><a class="btn btn-warning" href="/admin/edit/admin/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/admin/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

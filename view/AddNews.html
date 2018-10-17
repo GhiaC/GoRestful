@@ -63,6 +63,8 @@
         {{/*<td>{{unescape .Text}}</td>*/}}
             <td><img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.FileName}}"></td>
             <td>{{.Created}}</td>
+            <td><a class="btn btn-warning" href="/admin/edit/news/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/news/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

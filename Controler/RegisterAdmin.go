@@ -16,7 +16,6 @@ func RegisterNormal(w http.ResponseWriter, r *http.Request) {
 }
 
 func register(w http.ResponseWriter, r *http.Request, mode int) {
-
 	if ok, _, _, isRootAdmin := Authenticated(r); !(ok && isRootAdmin && mode == 1) && mode != 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
@@ -36,7 +35,7 @@ func register(w http.ResponseWriter, r *http.Request, mode int) {
 			vars.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
 			engine := GetEngine()
-			newUser := Struct.NewUser(username, password, "", "", "", mode) //Type = 1 is for admin
+			newUser := Struct.NewUser(username, password, "", "", "", mode, 1) //Type = 1 is for admin
 			affected, err := engine.Table(Struct.User{}).Insert(newUser)
 			if affected > 0 && err == nil {
 				vars.Answer = "Successful. Go to Login Page"

@@ -9,9 +9,10 @@ type User struct {
 	Type        int // 0 root admin // 1 admin // 2 user
 	Imei        string `xorm:"varchar(40)"`
 	Token       string `xorm:"varchar(256) default null"`
+	Status      int
 }
 
-func NewUser(username, password, name, phonenumber, IMEI string, Type int) *User {
+func NewUser(username, password, name, phonenumber, IMEI string, Type, status int) *User {
 	newUser := new(User)
 	newUser.Username = username
 	newUser.Password = password
@@ -19,21 +20,6 @@ func NewUser(username, password, name, phonenumber, IMEI string, Type int) *User
 	newUser.PhoneNumber = phonenumber
 	newUser.Imei = IMEI
 	newUser.Type = Type
+	newUser.Status = status
 	return newUser
 }
-
-//type User struct {
-//	Id       int64  `xorm:"pk autoincr"`
-//	Username string `xorm:"varchar(256) not null"`
-//	Password string `xorm:"varchar(256) not null"`
-//	Token    string `xorm:"varchar(256) default null"`
-//}
-//
-//func NewUser(username, password string) *User {
-//	newUser := new(User)
-//	newUser.Username = username
-//	newUser.Password = password
-//	return newUser
-//}
-//
-//

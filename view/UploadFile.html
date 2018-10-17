@@ -86,6 +86,8 @@
             <th>Key</th>
             <th>نوع فایل</th>
             <th>تاریخ ارسال</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -98,6 +100,8 @@
             <td>{{.Key}}</td>
             <td>{{.Type}}</td>
             <td>{{.Created}}</td>
+            <td><a class="btn btn-warning" href="/admin/edit/file/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/file/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

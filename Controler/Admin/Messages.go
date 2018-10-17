@@ -39,7 +39,7 @@ func Answer(w http.ResponseWriter, r *http.Request) {
 
 		result := Models.AnswerLayerVariables{
 			Answer:      "",
-			SubmitValue: "Send Answer",
+			SubmitValue: "ارسال پاسخ",
 		}
 
 		if submit != "" && (text == "") {
@@ -56,28 +56,18 @@ func Answer(w http.ResponseWriter, r *http.Request) {
 				result.Answer = "Successful."
 			}
 		}
+		http.Redirect(w, r, r.RequestURI+"?result="+result.Answer, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, "/", http.StatusForbidden)
+	}
+}
 
-		var msg Models.AnswerQuery
-
-		Controler.GetEngine().Table(Struct.Message{}).
-			Select("user.username,message.*").
-			Join("INNER", Struct.User{}, "message.user_id = user.id ").
-			Where(builder.Eq{"message.id": vars["id"]}).Get(&msg)
-
-		var answers [] Models.AnswerQuery
-
-		Controler.GetEngine().Table(Struct.Message{}).
-			Select("user.username,message.*").
-			Join("INNER", Struct.User{}, "message.user_id = user.id ").
-			Where(builder.Eq{"message.answer_to": message_id}).Find(&answers)
-
-		result.Msg = msg
-		result.Answers = answers
-
-		Controler.OpenTemplate(w, r, result, "Answer.html", Models.HeaderVariables{Title: "Answer"})
-
-	} else if ok, _, _, _ := Controler.Authenticated(r); ok {
-
+func AnswerGet(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	message_id, _ := strconv.Atoi(vars["id"])
+	if ok, _, _, _ := Controler.Authenticated(r); ok {
+		r.ParseForm()
+		resultInsert := r.Form.Get("result")
 		var msg Models.AnswerQuery
 		var answers [] Models.AnswerQuery
 
@@ -94,9 +84,9 @@ func Answer(w http.ResponseWriter, r *http.Request) {
 		result := Models.AnswerLayerVariables{
 			TitleId:     vars["id"],
 			Msg:         msg,
-			Answer:      "",
+			Answer:      resultInsert,
 			Answers:     answers,
-			SubmitValue: "Send Answer",}
+			SubmitValue: "ارسال پاسخ",}
 
 		Controler.OpenTemplate(w, r, result, "Answer.html", Models.HeaderVariables{Title: "Answer"})
 	} else {

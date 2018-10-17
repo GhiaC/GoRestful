@@ -40,6 +40,8 @@
             <th>Pic 1</th>
         {{/*<th>Pic 2</th>*/}}
             <th></th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -55,7 +57,10 @@
         {{/*<img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Pic2}}"*/}}
         {{/*alt="No Pic">*/}}
         {{/*</td>*/}}
-            <td><a href="/admin/Media/{{.Id}}">Add Media</a></td>
+            <td><a class="btn btn-success" href="/admin/Media/{{.Id}}">Add Media</a></td>
+
+            <td><a class="btn btn-warning" href="/admin/edit/SecondLayer/{{.Pid}}/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/SecondLayer/{{.Pid}}/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

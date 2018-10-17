@@ -10,6 +10,8 @@
             <th>نوع فایل</th>
             <th>تاریخ ارسال</th>
             <th></th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -21,7 +23,7 @@
             <td>{{.FileAddress}}</td>
             <td>{{.Type}}</td>
             <td>{{.Created}}</td>
-            <td><a href="/admin/message/answer/{{.Id}}">پاسخ دهید</a></td>
+            <td><a class="btn btn-success" href="/admin/message/answer/{{.Id}}">پاسخ دهید</a></td>
         </tr>
         {{end}}
         </tbody>
