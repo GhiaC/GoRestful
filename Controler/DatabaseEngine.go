@@ -22,19 +22,19 @@ func GetEngine() *xorm.Engine{
 			fmt.Println(errDB)
 		}
 
-		engine.Update(&Struct.User{})
+		engine.Sync(&Struct.User{})
 		//engine.CreateTables(&Struct.UserMessage{})
 		//engine.CreateTables(&Struct.Admin{})
 		//engine.CreateTables(&Struct.AdminMessage{})
-		engine.CreateTables(&Struct.Media{})
-		engine.CreateTables(&Struct.Subtitle{})
-		engine.CreateTables(&Struct.Title{})
+		engine.Sync(&Struct.Media{})
+		engine.Sync(&Struct.Subtitle{})
+		engine.Sync(&Struct.Title{})
 		//engine.CreateTables(&Struct.Picture{})
-		engine.CreateTables(&Struct.SubMedia{})
-		engine.CreateTables(&Struct.Message{})
+		engine.Sync(&Struct.SubMedia{})
+		engine.Sync(&Struct.Message{})
 		//engine.CreateTables(&Struct.AdminPicture{})
-		engine.CreateTables(&Struct.File{})
-		engine.Update(&Struct.News{})
+		engine.Sync(&Struct.File{})
+		engine.Sync(&Struct.News{})
 
 
 		//engine.Sync2(new(Models.User))
