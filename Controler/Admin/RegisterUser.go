@@ -5,7 +5,9 @@ import (
 	"../../Models"
 	"../../Models/Struct"
 	"github.com/go-xorm/builder"
+	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
@@ -18,25 +20,28 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		name := r.PostForm.Get("name")
 		IMEI := r.PostForm.Get("IMEI")
 		password := r.PostForm.Get("password")
+		edit, er1 := strconv.Atoi(r.PostForm.Get("edit"))
 
-		vars := Models.LoginPageVariables{
+		result := Models.LoginPageVariables{
 			Answer:      "",
 			SubmitValue: "افزودن کاربر",
 		}
 
 		if username == "" || password == "" {
-			vars.Answer = "username or password is empty"
-		} else if hasUser(username) {
-			vars.Answer = "username has already been taken"
+			result.Answer = "username or password is empty"
+		} else if hasUser(username) && er1 != nil {
+			result.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
-			engine := Controler.GetEngine()
 			newUser := Struct.NewUser(username, password, name, PhoneNumber, IMEI, 2, 1) // type 2 = user
-			affected, err := engine.Table(Struct.User{}).Insert(newUser)
-			if affected > 0 && err == nil {
-				vars.Answer = "Successful. Go to Login Page"
-			}
+			result.Answer = Controler.InsertOrUpdate(&Struct.User{}, newUser, edit, er1)
 		}
-		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "افزودن کاربر"})
+
+		var editObject Struct.User
+		if edit > 0 && er1 == nil {
+			Controler.GetEngine().Table(Struct.User{}).Where(builder.Eq{"id": edit}).Get(&editObject)
+		}
+		result.PreviousValue = editObject
+		Controler.OpenTemplate(w, r, result, "Register.html", Models.HeaderVariables{Title: "ثبت"})
 	}
 }
 
@@ -44,11 +49,19 @@ func AddUserGet(w http.ResponseWriter, r *http.Request) {
 	if ok, _, _, _ := Controler.Authenticated(r); !ok {
 		http.Redirect(w, r, "/", http.StatusForbidden)
 	} else {
-		vars := Models.LoginPageVariables{
-			Answer:      "",
-			SubmitValue: "افزودن کاربر",
+		vars := mux.Vars(r)
+		var editObject Struct.User
+		if vars["id"] != "" {
+			Controler.GetEngine().Table(Struct.User{}).Where(builder.Eq{"id": vars["id"]}).Get(&editObject)
 		}
-		Controler.OpenTemplate(w, r, vars, "Register.html", Models.HeaderVariables{Title: "افزودن کاربر"})
+
+		result := Models.LoginPageVariables{
+			Answer:        "",
+			SubmitValue:   "ثبت",
+			PreviousValue: editObject,
+		}
+
+		Controler.OpenTemplate(w, r, result, "Register.html", Models.HeaderVariables{Title: "افزودن کاربر"})
 	}
 }
 

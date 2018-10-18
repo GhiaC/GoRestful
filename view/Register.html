@@ -7,25 +7,33 @@
                     {{.Answer}}
                     </div>
                     <form method="post">
+                    {{if .PreviousValue.Id}}
+                        <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                    {{end}}
                         <div class="form-group">
                             <label for="name">نام :</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   value="{{.PreviousValue.Name}}">
                         </div>
                         <div class="form-group">
                             <label for="PhoneNumber">شماره تماس :</label>
-                            <input type="text" class="form-control" name="PhoneNumber" id="PhoneNumber">
+                            <input type="text" class="form-control" name="PhoneNumber" id="PhoneNumber"
+                                   value="{{.PreviousValue.PhoneNumber}}">
                         </div>
                         <div class="form-group">
                             <label for="IMEI">IMEI :</label>
-                            <input type="text" class="form-control" name="IMEI" id="IMEI">
+                            <input type="text" class="form-control" name="IMEI" id="IMEI"
+                                   value="{{.PreviousValue.Imei}}">
                         </div>
                         <div class="form-group">
                             <label for="usr">نام کاربری :</label>
-                            <input type="text" class="form-control" id="usr" name="username">
+                            <input type="text" class="form-control" id="usr" name="username"
+                                   value="{{.PreviousValue.Username}}">
                         </div>
                         <div class="form-group">
                             <label for="pwd">کلمه عبور :</label>
-                            <input type="password" class="form-control" name="password" id="psw">
+                            <input type="password" class="form-control" name="password" id="psw"
+                                   value="{{.PreviousValue.Password}}">
                         </div>
                         <div class="from-group">
                             <button type="submit" value="{{.SubmitValue}}"

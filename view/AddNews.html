@@ -7,15 +7,20 @@
                     {{.Answer}}
                     </div>
                     <form method="post">
+                    {{if .PreviousValue.Id}}
+                        <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                    {{end}}
                         <div class="form-group">
                             <label for="Title">عنوان :</label>
-                            <input type="text" class="form-control" id="Title" name="Title">
+                            <input type="text" class="form-control" id="Title" name="Title"
+                                   value="{{.PreviousValue.Title}}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group">FileName
                             <label for="filename">انتخاب محتوا :</label>
                             <select class="my-select" style="width: 100%;" id="filename" name="filename">
                             {{range .OptionFiles}}
-                                <option value="{{.Key}}">{{.Description}}</option>
+                                <option {{if (eq .Key $.PreviousValue.FileName) }}
+                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
@@ -23,13 +28,15 @@
                         <div class="form-group">
                             <label for="editor">متن :</label>
                             <div id="toolbar-container"></div>
-                            <div style="height: 300px" class="form-control" id="editor"></div>
-                            <input type="hidden" name="text" id="dash_new_shout_textarea_hidden">
-                            <script>
-                                setInterval(function () {
-                                    document.getElementById("dash_new_shout_textarea_hidden").value = document.getElementById("editor").innerHTML;
-                                }, 5);
-                            </script>
+                            <input id="x" type="hidden" name="text">
+                            <trix-editor input="x">{{.PreviousValue.Text}}</trix-editor>
+                            {{/*<div style="height: 300px" class="form-control" id="editor">{{.PreviousValue.Text}}</div>*/}}
+                            {{/*<input type="hidden" name="text" id="dash_new_shout_textarea_hidden">*/}}
+                            {{/*<script>*/}}
+                                {{/*setInterval(function () {*/}}
+                                    {{/*document.getElementById("dash_new_shout_textarea_hidden").value = document.getElementById("editor").innerHTML;*/}}
+                                {{/*}, 5);*/}}
+                            {{/*</script>*/}}
                         </div>
                         <div class="from-group">
                             <button name="submit" type="submit"
@@ -61,9 +68,9 @@
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
         {{/*<td>{{unescape .Text}}</td>*/}}
-            <td><img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.FileName}}"></td>
+            <td><img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.FileName}}"></td>
             <td>{{.Created}}</td>
-            <td><a class="btn btn-warning" href="/admin/edit/news/{{.Id}}">ویرایش</a></td>
+            {{/*<td><a class="btn btn-warning" href="/admin/edit/news/{{.Id}}">ویرایش</a></td>*/}}
             <td><a class="btn btn-danger" href="/admin/delete/news/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}

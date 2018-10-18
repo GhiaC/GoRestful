@@ -85,7 +85,7 @@
             <th>توضیحات</th>
             <th>Key</th>
             <th>نوع فایل</th>
-            <th>تاریخ ارسال</th>
+            {{/*<th>تاریخ ارسال</th>*/}}
             <th></th>
             <th></th>
         </tr>
@@ -95,12 +95,13 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Username}}</td>
-            <td><img style="width: 100px" alt="No Pic" src="https://s8.ghiasi.me/file/?file={{.Key}}"></td>
+            <td>
+                <img style="width: 250px" alt="No Pic" src="https://s8.ghiasi.me/file/?file={{.Key}}">
+            </td>
             <td>{{.Description}}</td>
             <td>{{.Key}}</td>
             <td>{{.Type}}</td>
-            <td>{{.Created}}</td>
-            <td><a class="btn btn-warning" href="/admin/edit/file/{{.Id}}">ویرایش</a></td>
+            {{/*<td>{{.Created}}</td>*/}}
             <td><a class="btn btn-danger" href="/admin/delete/file/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}

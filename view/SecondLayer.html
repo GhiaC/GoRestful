@@ -9,13 +9,18 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="usr">زیرعنوان (لایه دوم) :</label>
-                            <input type="text" class="form-control" id="usr" name="username">
+                            <input type="text" class="form-control" id="usr" name="username"
+                                   value="{{.PreviousValue.Title}}">
+                        {{if .PreviousValue.Id}}
+                            <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                        {{end}}
                         </div>
                         <div class="form-group">
                             <label for="pic1">محتوا :</label>
                             <select class="my-select" style="width: 100%;" id="pic1" name="pic1">
                             {{range .OptionFiles}}
-                                <option value="{{.Key}}">{{.Description}}</option>
+                                <option {{if (eq .Key $.PreviousValue.Picture) }}
+                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
@@ -50,7 +55,7 @@
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
             <td>
-                <img style="width: 100px" src="https://s8.ghiasi.me/file/file/?file={{.Picture}}"
+                <img style="width: 250px" src="https://s8.ghiasi.me/file/file/?file={{.Picture}}"
                      alt="No Pic">
             </td>
         {{/*<td>*/}}

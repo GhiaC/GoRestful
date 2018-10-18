@@ -22,7 +22,7 @@ func GetEngine() *xorm.Engine{
 			fmt.Println(errDB)
 		}
 
-		engine.CreateTables(&Struct.User{})
+		engine.Update(&Struct.User{})
 		//engine.CreateTables(&Struct.UserMessage{})
 		//engine.CreateTables(&Struct.Admin{})
 		//engine.CreateTables(&Struct.AdminMessage{})
@@ -34,7 +34,7 @@ func GetEngine() *xorm.Engine{
 		engine.CreateTables(&Struct.Message{})
 		//engine.CreateTables(&Struct.AdminPicture{})
 		engine.CreateTables(&Struct.File{})
-		engine.CreateTables(&Struct.News{})
+		engine.Update(&Struct.News{})
 
 
 		//engine.Sync2(new(Models.User))

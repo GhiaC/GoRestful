@@ -19,7 +19,7 @@
                         <td>{{.Msg.Username}}</td>
                         <td>{{.Msg.Text}}</td>
                         <td>
-                            <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Msg.FileAddress}}"
+                            <img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.Msg.FileAddress}}"
                                  alt="No Pic">
                         </td>
                         <td>{{.Msg.Created}}</td>
@@ -48,10 +48,10 @@
                         <td>{{.Username}}</td>
                         <td>{{.Text}}</td>
                         <td>
-                            <img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.FileAddress}}"
+                            <img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.FileAddress}}"
                                  alt="No Pic"></td>
                         <td>{{.Created}}</td>
-                        <td><a class="btn btn-warning" href="/admin/edit/message/{{.Id}}">ویرایش</a></td>
+                        {{/*<td><a class="btn btn-warning" href="/admin/edit/message/{{.Id}}">ویرایش</a></td>*/}}
                         <td><a class="btn btn-danger" href="/admin/delete/message/{{.Id}}">حذف</a></td>
                     </tr>
                     {{end}}

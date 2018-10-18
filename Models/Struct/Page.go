@@ -1,6 +1,9 @@
 package Struct
 
-import "time"
+import (
+	"html/template"
+	"time"
+)
 
 type Title struct {
 	Id      int64  `xorm:"pk autoincr"`
@@ -17,7 +20,7 @@ func NewTitle(title, picture string) *Title {
 
 type Subtitle struct {
 	//changed
-	Id      int64  `xorm:"pk autoincr"`
+	Id      int64 `xorm:"pk autoincr"`
 	Pid     int64
 	Title   string `xorm:"varchar(256) not null"`
 	Picture string `xorm:"varchar(256) not null"`
@@ -33,7 +36,7 @@ func NewSubtitle(pid int64, title, picture string) *Subtitle {
 
 type Media struct {
 	//Changed
-	Id      int64  `xorm:"pk autoincr"`
+	Id      int64 `xorm:"pk autoincr"`
 	Pid     int64
 	Picture string `xorm:"varchar(256) not null"`
 	Title   string `xorm:"text not null"`
@@ -49,7 +52,7 @@ func NewMedia(pid int64, Title, picture string) *Media { //changed
 
 type SubMedia struct {
 	//Changed
-	Id   int64  `xorm:"pk autoincr"`
+	Id   int64 `xorm:"pk autoincr"`
 	Pid  int64
 	Url  string `xorm:"varchar(256) not null"`
 	Text string `xorm:"text not null"`
@@ -77,14 +80,14 @@ func NewAboutUs(Text string) *AboutUs {
 }
 
 type News struct {
-	Id       int64     `xorm:"pk autoincr"`
-	Title    string    `xorm:"text unique not null"`
-	Text     string    `xorm:"text unique not null"`
-	FileName string    `xorm:"varchar(256) unique not null"`
-	Created  time.Time `xorm:"created"`
+	Id       int64         `xorm:"pk autoincr"`
+	Title    string        `xorm:"text unique not null"`
+	Text     template.HTML `xorm:"text unique not null"`
+	FileName string        `xorm:"varchar(256) unique not null"`
+	Created  time.Time     `xorm:"created"`
 }
 
-func NewNews(Text, FileName, Title string) *News {
+func NewNews(Text template.HTML, FileName, Title string) *News {
 	news := new(News)
 	news.Text = Text
 	news.FileName = FileName

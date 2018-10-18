@@ -1,26 +1,27 @@
 package Admin
 
 import (
-	"net/http"
 	"../../Controler"
 	"../../Models"
 	"../../Models/Struct"
-	"mime/multipart"
-	"io/ioutil"
-	"fmt"
 	"encoding/json"
-	"log"
-	"strconv"
+	"fmt"
 	"github.com/go-xorm/builder"
+	"io/ioutil"
+	"log"
+	"mime/multipart"
+	"net/http"
+	"strconv"
 )
 
 func UploadPage(w http.ResponseWriter, r *http.Request) {
-	if ok, _, _ ,_:= Controler.Authenticated(r); ok {
+	if ok, _, _, _ := Controler.Authenticated(r); ok {
 
 		var files []Models.FileInner
 		Controler.GetEngine().Table(Struct.File{}).Select("file.*,user.username").
 			Join("INNER", Struct.User{}, "file.user_id = user.id ").
 			Where(builder.Eq{"admin_file": true}).Find(&files)
+
 		result := Models.AdminFileLayerVariables{
 			Files: files,
 		}
@@ -55,7 +56,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}, Admin
 		Result:   false,
 		FileName: "",
 	}
-	logged, _, id ,_:= Controler.Authenticated(r)
+	logged, _, id, _ := Controler.Authenticated(r)
 	if !logged && !(id > 0) {
 		response.Error = "Access denied"
 		jsonResponse(w, http.StatusOK, &response)
@@ -90,7 +91,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request, table interface{}, Admin
 	//	jsonResponse(w, http.StatusBadRequest, &response)
 	//	return
 	//}
-	jsonResponse(w, http.StatusOK, &response)
+	jsonResponse(w, http.StatusNoContent, &response)
 
 }
 

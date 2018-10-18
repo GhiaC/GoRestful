@@ -66,14 +66,14 @@ func main() {
 		s2.HandleFunc("/FirstLayer", Admin.FirstLayer).Methods("POST")   //DONE
 		s2.HandleFunc("/FirstLayer", Admin.FirstLayerGet).Methods("GET") //DONE
 
-		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayer).Methods("POST")   //DONE
-		s2.HandleFunc("/SecondLayer/{id:[0-9]+}", Admin.SecondLayerGet).Methods("GET") //DONE
+		s2.HandleFunc("/SecondLayer/{pid:[0-9]+}", Admin.SecondLayer).Methods("POST")   //DONE
+		s2.HandleFunc("/SecondLayer/{pid:[0-9]+}", Admin.SecondLayerGet).Methods("GET") //DONE
 
-		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.Media).Methods("POST")   //DONE
-		s2.HandleFunc("/Media/{id:[0-9]+}", Admin.MediaGet).Methods("GET") //DONE
+		s2.HandleFunc("/Media/{pid:[0-9]+}", Admin.Media).Methods("POST")   //DONE
+		s2.HandleFunc("/Media/{pid:[0-9]+}", Admin.MediaGet).Methods("GET") //DONE
 
-		s2.HandleFunc("/SubMedia/{id:[0-9]+}", Admin.SubMedia).Methods("POST")   //DONE
-		s2.HandleFunc("/SubMedia/{id:[0-9]+}", Admin.SubMediaGet).Methods("GET") //DONE
+		s2.HandleFunc("/SubMedia/{pid:[0-9]+}", Admin.SubMedia).Methods("POST")   //DONE
+		s2.HandleFunc("/SubMedia/{pid:[0-9]+}", Admin.SubMediaGet).Methods("GET") //DONE
 
 		s2.HandleFunc("/adduser", Admin.AddUser).Methods("POST")   //DONE
 		s2.HandleFunc("/adduser", Admin.AddUserGet).Methods("GET") //DONE
@@ -110,17 +110,40 @@ func main() {
 			s4.HandleFunc("/file/{id:[0-9]+}", Admin.RemoveFile)
 			s4.HandleFunc("/message/{id:[0-9]+}", Admin.RemoveMessages)
 		}
+
+		s5 := s2.PathPrefix("/edit").Subrouter()
+		{
+			s5.HandleFunc("/user/{id:[0-9]+}", Admin.AddUser).Methods("POST")
+			s5.HandleFunc("/user/{id:[0-9]+}", Admin.AddUserGet).Methods("GET")
+
+			s5.HandleFunc("/FirstLayer/{id:[0-9]+}", Admin.FirstLayer).Methods("POST")
+			s5.HandleFunc("/FirstLayer/{id:[0-9]+}", Admin.FirstLayerGet).Methods("GET")
+
+			s5.HandleFunc("/SecondLayer/{pid:[0-9]+}/{id:[0-9]+}", Admin.SecondLayer).Methods("POST")
+			s5.HandleFunc("/SecondLayer/{pid:[0-9]+}/{id:[0-9]+}", Admin.SecondLayerGet).Methods("GET")
+
+			s5.HandleFunc("/Media/{pid:[0-9]+}/{id:[0-9]+}", Admin.Media).Methods("POST")
+			s5.HandleFunc("/Media/{pid:[0-9]+}/{id:[0-9]+}", Admin.MediaGet).Methods("GET")
+
+			s5.HandleFunc("/SubMedia/{pid:[0-9]+}/{id:[0-9]+}", Admin.SubMedia).Methods("POST")
+			s5.HandleFunc("/SubMedia/{pid:[0-9]+}/{id:[0-9]+}", Admin.SubMediaGet).Methods("GET")
+
+			s5.HandleFunc("/admin/{id:[0-9]+}", Controler.RegisterNormal)
+
+			s5.HandleFunc("/news/{id:[0-9]+}", Admin.News).Methods("POST")
+			s5.HandleFunc("/news/{id:[0-9]+}", Admin.NewsGet).Methods("GET")
+		}
 	}
 
 	r.HandleFunc("/file/", Controler.HandleClient)
 	r.NotFoundHandler = http.HandlerFunc(notFoundHandler)
 	http.Handle("/", r)
 
-	go func() {
-		if err := http.ListenAndServe(":"+Controler.Configuration.Port, nil); err != nil {
-			log.Println(err)
-		}
-	}()
+	//go func() {
+	if err := http.ListenAndServe(":"+Controler.Configuration.Port, nil); err != nil {
+		log.Println(err)
+	}
+	//}()
 
 	//Graceful Shutdown
 	c := make(chan os.Signal, 1)

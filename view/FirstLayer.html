@@ -9,14 +9,18 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="title">عنوان :</label>
-                            <input type="text" class="form-control" id="title" name="title">
+                            <input type="text" class="form-control" id="title" name="title"
+                                   value="{{.PreviousValue.Title}}">
+                        {{if .PreviousValue.Id}}
+                            <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                        {{end}}
                         </div>
                         <div class="form-group">
                             <label for="Picture">انتخاب محتوا :</label>
                             <select class="my-select" style="width: 100%;" id="Picture" name="picture">
                             {{range .OptionFiles}}
-                                <option value="{{.Key}}" data-active="http://localhost:8080/file/?file={{.Key}}"
-                                        data-img-src="http://localhost:8080/file/?file={{.Key}}">{{.Description}}</option>
+                                <option {{if (eq .Key $.PreviousValue.Picture) }}
+                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
@@ -47,10 +51,10 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
-            <td><img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Picture}}"></td>
+            <td><img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.Picture}}"></td>
             <td><a class="btn btn-success" href="/admin/SecondLayer/{{.Id}}">Add Subtitle</a></td>
-            <td><a class="btn btn-warning" href="/admin/edit/file/{{.Id}}">ویرایش</a></td>
-            <td><a class="btn btn-danger" href="/admin/delete/file/{{.Id}}">حذف</a></td>
+            <td><a class="btn btn-warning" href="/admin/edit/FirstLayer/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/FirstLayer/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>

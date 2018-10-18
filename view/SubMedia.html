@@ -1,4 +1,3 @@
-git
 <div class="well">
     <div class="jumbotron">
         <div class="container">
@@ -11,13 +10,17 @@ git
                         <div class="form-group">
                             <label for="text">Text :</label>
                             <div id="toolbar-container"></div>
-                            <textarea class="form-control" id="text" name="text"></textarea>
+                            <textarea class="form-control" id="text" name="text">{{.PreviousValue.Text}}</textarea>
+                        {{if .PreviousValue.Id}}
+                            <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                        {{end}}
                         </div>
                         <div class="form-group">
                             <label for="picture">Picture :</label>
                             <select class="my-select" style="width: 100%;" id="picture" name="picture">
                             {{range .OptionFiles}}
-                                <option value="{{.Key}}">{{.Description}}</option>
+                                <option {{if (eq .Key $.PreviousValue.Url) }}
+                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
@@ -49,7 +52,7 @@ git
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Text}}</td>
-            <td><img style="width: 100px" src="https://s8.ghiasi.me/file/?file={{.Url}}"></td>
+            <td><img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.Url}}"></td>
             <td><a class="btn btn-warning" href="/admin/edit/SubMedia/{{.Pid}}/{{.Id}}">ویرایش</a></td>
             <td><a class="btn btn-danger" href="/admin/delete/SubMedia/{{.Pid}}/{{.Id}}">حذف</a></td>
         </tr>

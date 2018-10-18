@@ -20,6 +20,17 @@ type GetMessageResponse struct {
 
 type UploadFileResponse struct {
 	Result   bool
+	url      string
 	Error    string
 	FileName string
+}
+
+type UResponse struct {
+	Url      string
+}
+
+func NewUploadFileResponse(url string) *UResponse {
+	newFile := new(UResponse)
+	newFile.Url = url
+	return newFile
 }

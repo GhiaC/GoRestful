@@ -17,6 +17,7 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 		text := r.PostForm.Get("text")
 		picture := r.PostForm.Get("picture")
 		submit := r.PostForm.Get("submit")
+		edit, er1 := strconv.Atoi(r.PostForm.Get("edit"))
 
 		result := Models.SubMediaLayerVariables{
 			Answer:      "",
@@ -26,13 +27,9 @@ func SubMedia(w http.ResponseWriter, r *http.Request) {
 		if submit != "" && (text == "") {
 			result.Answer = "text is empty"
 		} else if text != "" {
-			engine := Controler.GetEngine()
-			id, _ := strconv.Atoi(vars["id"])
-			newUser := Struct.NewSubMedia(int64(id), picture, text)
-			affected, err := engine.Table(Struct.SubMedia{}).Insert(newUser)
-			if affected > 0 && err == nil {
-				result.Answer = "Successful."
-			}
+			id, _ := strconv.Atoi(vars["pid"])
+			newObj := Struct.NewSubMedia(int64(id), picture, text)
+			result.Answer = Controler.InsertOrUpdate(&Struct.SubMedia{}, newObj, edit, er1)
 		}
 
 		http.Redirect(w, r, r.RequestURI+"?result="+result.Answer, http.StatusSeeOther)
@@ -49,13 +46,19 @@ func SubMediaGet(w http.ResponseWriter, r *http.Request) {
 		resultInsert := r.Form.Get("result")
 		var medias []Struct.SubMedia
 		Controler.GetEngine().Table(Struct.SubMedia{}).AllCols().
-			Where(builder.Eq{"pid": vars["id"]}).
+			Where(builder.Eq{"pid": vars["pid"]}).
 			Find(&medias)
 
+		var editObject Struct.SubMedia
+		if vars["id"] != "" {
+			Controler.GetEngine().Table(Struct.SubMedia{}).Where(builder.Eq{"id": vars["id"]}).Get(&editObject)
+		}
+
 		result := Models.SubMediaLayerVariables{
-			TitleId:     vars["id"],
+			TitleId:     vars["pid"],
 			SubMedias:   medias,
 			Answer:      resultInsert,
+			PreviousValue : editObject,
 			SubmitValue: "Add SubMedia",}
 		result.OptionFiles = Controler.Files()
 		Controler.OpenTemplate(w, r, result, "SubMedia.html", Models.HeaderVariables{Title: "SubMedia"})

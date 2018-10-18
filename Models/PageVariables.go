@@ -9,7 +9,8 @@ type PageVariables struct {
 type LoginPageVariables struct {
 	Answer string
 	//Url         string
-	SubmitValue string
+	PreviousValue Struct.User
+	SubmitValue   string
 }
 
 type HomePageVariables struct {
@@ -30,12 +31,13 @@ type HeaderVariables struct {
 }
 
 type NavigationVariables struct {
-	LoggedIn bool
+	LoggedIn    bool
 	IsRootAdmin bool
 }
 
 type FirstLayerVariables struct {
-	Titles [] Struct.Title
+	Titles        [] Struct.Title
+	PreviousValue Struct.Title
 
 	Answer string
 	//Url         string
@@ -44,8 +46,9 @@ type FirstLayerVariables struct {
 }
 
 type SecondLayerVariables struct {
-	Subtitles [] Struct.Subtitle
-	TitleId   string
+	Subtitles     [] Struct.Subtitle
+	PreviousValue Struct.Subtitle
+	TitleId       string
 
 	Answer string
 	//Url         string
@@ -54,8 +57,9 @@ type SecondLayerVariables struct {
 }
 
 type MediaLayerVariables struct {
-	Medias  [] Struct.Media
-	TitleId string
+	Medias        [] Struct.Media
+	PreviousValue Struct.Media
+	TitleId       string
 
 	Answer string
 	//Url         string
@@ -64,7 +68,9 @@ type MediaLayerVariables struct {
 }
 
 type SubMediaLayerVariables struct {
-	SubMedias  [] Struct.SubMedia
+	SubMedias     [] Struct.SubMedia
+	PreviousValue Struct.SubMedia
+
 	TitleId string
 
 	Answer string
@@ -84,6 +90,7 @@ type AnswerLayerVariables struct {
 type NewsLayerVariables struct {
 	News [] Struct.News
 	//TitleId string
+	PreviousValue Struct.News
 
 	Answer      string
 	Url         string

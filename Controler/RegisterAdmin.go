@@ -4,7 +4,12 @@ import (
 	"../Models"
 	"../Models/Struct"
 	"github.com/go-xorm/builder"
+	"github.com/gorilla/mux"
+
+	//"github.com/gorilla/mux"
 	"net/http"
+	//"restful/Controler/Admin"
+	"strconv"
 )
 
 func RegisterRoot(w http.ResponseWriter, r *http.Request) {
@@ -16,6 +21,7 @@ func RegisterNormal(w http.ResponseWriter, r *http.Request) {
 }
 
 func register(w http.ResponseWriter, r *http.Request, mode int) {
+	vars := mux.Vars(r)
 	if ok, _, _, isRootAdmin := Authenticated(r); !(ok && isRootAdmin && mode == 1) && mode != 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
@@ -23,25 +29,29 @@ func register(w http.ResponseWriter, r *http.Request, mode int) {
 		username := r.PostForm.Get("username")
 		password := r.PostForm.Get("password")
 		submit := r.PostForm.Get("submit")
+		edit, er1 := strconv.Atoi(r.PostForm.Get("edit"))
 
-		vars := Models.LoginPageVariables{
+		result := Models.LoginPageVariables{
 			Answer:      "",
 			SubmitValue: "Register",
 		}
 
 		if submit != "" && (username == "" || password == "") {
-			vars.Answer = "username or password is empty"
-		} else if hasUser(username) {
-			vars.Answer = "username has already been taken"
+			result.Answer = "username or password is empty"
+		} else if hasUser(username) && er1 != nil {
+			result.Answer = "username has already been taken"
 		} else if username != "" && password != "" {
-			engine := GetEngine()
 			newUser := Struct.NewUser(username, password, "", "", "", mode, 1) //Type = 1 is for admin
-			affected, err := engine.Table(Struct.User{}).Insert(newUser)
-			if affected > 0 && err == nil {
-				vars.Answer = "Successful. Go to Login Page"
-			}
+			result.Answer = InsertOrUpdate(&Struct.User{}, newUser, edit, er1)
 		}
-		OpenTemplate(w, r, vars, "login.html", Models.HeaderVariables{Title: "Register"})
+
+		var editObject Struct.User
+		if vars["id"] != "" {
+			GetEngine().Table(Struct.User{}).Where(builder.Eq{"id": vars["id"]}).Get(&editObject)
+		}
+		result.PreviousValue = editObject
+
+		OpenTemplate(w, r, result, "login.html", Models.HeaderVariables{Title: "Register"})
 	}
 }
 

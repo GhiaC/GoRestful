@@ -30,19 +30,19 @@ func RemoveSubMedia(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemoveAdmin(w http.ResponseWriter, r *http.Request) {
-	removeGeneral(w, r, &Struct.User{}, "/admins")
+	removeGeneral(w, r, &Struct.User{}, "/admin/admins")
 }
 
 func RemoveNews(w http.ResponseWriter, r *http.Request) {
-	removeGeneral(w, r, &Struct.News{}, "/news")
+	removeGeneral(w, r, &Struct.News{}, "/admin/news")
 }
 
 func RemoveFile(w http.ResponseWriter, r *http.Request) {
-	removeGeneral(w, r, &Struct.File{}, "/upload")
+	removeGeneral(w, r, &Struct.File{}, "/admin/upload")
 }
 
 func RemoveMessages(w http.ResponseWriter, r *http.Request) {
-	removeGeneral(w, r, &Struct.Message{}, "/messages")
+	removeGeneral(w, r, &Struct.Message{}, "/admin/messages")
 }
 
 func removeGeneral(w http.ResponseWriter, r *http.Request, model interface{}, previousPage string) {

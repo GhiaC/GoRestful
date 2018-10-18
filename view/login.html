@@ -7,16 +7,22 @@
                     {{.Answer}}
                     </div>
                     <form method="post">
+                    {{if .PreviousValue.Id}}
+                        <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                    {{end}}
                         <div class="form-group">
                             <label for="usr">نام کاربری :</label>
-                            <input type="text" class="form-control" id="usr" name="username">
+                            <input type="text" class="form-control" id="usr" name="username"
+                                   value="{{.PreviousValue.Username}}">
                         </div>
                         <div class="form-group">
                             <label for="pwd">کلمه عبور :</label>
-                            <input type="password" class="form-control" name="password" id="psw">
+                            <input type="password" class="form-control" name="password" id="psw"
+                                   value="{{.PreviousValue.Password}}">
                         </div>
                         <div class="from-group">
-                            <button type="submit" value="{{.SubmitValue}}" class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
+                            <button type="submit" value="{{.SubmitValue}}"
+                                    class="btn col-sm-12 btn-primary btn-sm">{{.SubmitValue}}</button>
                         </div>
                     </form>
                 </div>

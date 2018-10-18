@@ -9,14 +9,20 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="text">عنوان :</label>
-                            <input type="text" class="form-control" id="text" name="text">
+                            <input type="text" class="form-control" id="text" name="text"
+                                   value="{{.PreviousValue.Title}}">
+
+                        {{if .PreviousValue.Id}}
+                            <input name="edit" value="{{.PreviousValue.Id}}" type="hidden">
+                        {{end}}
                         </div>
 
                         <div class="form-group">
                             <label for="picture">انتخاب محتوا :</label>
                             <select class="my-select" style="width: 100%;" id="Picture" name="picture">
                             {{range .OptionFiles}}
-                                <option value="{{.Key}}">{{.Description}}</option>
+                                <option {{if (eq .Key $.PreviousValue.Picture) }}
+                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
@@ -46,10 +52,10 @@
         <tr>
             <td>{{.Id}}</td>
             <td>{{.Title}}</td>
-            <td><img style="width: 100px" src="https://s8.ghiasi.me/file/file/?file={{.Picture}}"></td>
+            <td><img style="width: 250px" src="https://s8.ghiasi.me/file/?file={{.Picture}}"></td>
             <td><a class="btn btn-success" href="/admin/SubMedia/{{.Id}}">Add SubMedia</a></td>
-            <td><a class="btn btn-warning" href="/admin/edit/SubMedia/{{.Pid}}/{{.Id}}">ویرایش</a></td>
-            <td><a class="btn btn-danger" href="/admin/delete/SubMedia/{{.Pid}}/{{.Id}}">حذف</a></td>
+            <td><a class="btn btn-warning" href="/admin/edit/Media/{{.Pid}}/{{.Id}}">ویرایش</a></td>
+            <td><a class="btn btn-danger" href="/admin/delete/Media/{{.Pid}}/{{.Id}}">حذف</a></td>
         </tr>
         {{end}}
         </tbody>
