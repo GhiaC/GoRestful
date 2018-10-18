@@ -20,7 +20,7 @@
                             <select class="my-select" style="width: 100%;" id="filename" name="filename">
                             {{range .OptionFiles}}
                                 <option {{if (eq .Key $.PreviousValue.FileName) }}
-                                selected {{end}} value="https://s8.ghiasi.me/file/?file={{.Key}}">{{.Description}}</option>
+                                selected {{end}} value="{{.Key}}">{{.Description}}</option>
                             {{end}}
                             </select>
                         </div>
